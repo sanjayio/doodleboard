@@ -2,6 +2,8 @@
 
 A _minimalist_ canvas-based drawing application that lives entirely in your browser. Draw shapes, annotate with text, and share everything via URL.
 
+![](./images/Doodleboard.jpeg)
+
 ## Features
 
 - 🎨 **Canvas Drawing** – Rectangles, circles, lines, arrows, freehand pen, text boxes, and sticky notes
@@ -29,6 +31,7 @@ A _minimalist_ canvas-based drawing application that lives entirely in your brow
 ## Keyboard Shortcuts
 
 ### Tools
+
 - `V` – Select tool
 - `R` – Rectangle
 - `C` – Circle
@@ -41,6 +44,7 @@ A _minimalist_ canvas-based drawing application that lives entirely in your brow
 - `H` – Pan (or hold `Space` + drag)
 
 ### Actions
+
 - `Delete` / `Backspace` – Delete selected elements
 - `Cmd/Ctrl + Z` – Undo
 - `Cmd/Ctrl + Shift + Z` – Redo
@@ -49,6 +53,7 @@ A _minimalist_ canvas-based drawing application that lives entirely in your brow
 - `Mouse Wheel` – Zoom in/out
 
 ### Editing
+
 - `Double-click` text element to edit
 - `Shift + Click` – Add to selection
 - Drag in empty area – Box selection
@@ -70,4 +75,4 @@ A _minimalist_ canvas-based drawing application that lives entirely in your brow
 
 ---
 
-*Made with ❤️ and JavaScript*
+_Made with ❤️ and JavaScript_
