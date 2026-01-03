@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
-<link rel="manifest" href="manifest.json">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+  name="theme-color"
+  content="#ffffff"
+  media="(prefers-color-scheme: light)"
+/>
+<meta
+  name="theme-color"
+  content="#000000"
+  media="(prefers-color-scheme: dark)"
+/>
+<link rel="manifest" href="manifest.json" />
 <title>Doodleboard</title>
 <style>
   * {
@@ -85,7 +93,7 @@
     left: 50%;
     transform: translateX(-50%);
     background: #fff;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     border-radius: 8px;
     padding: 8px;
     display: flex;
@@ -95,7 +103,7 @@
 
     @media (prefers-color-scheme: dark) {
       background: #2a2a2a;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
     }
   }
 
@@ -117,6 +125,11 @@
 
   .tool-group:last-child {
     border-right: none;
+  }
+
+  .github-buttons-group {
+    justify-content: center;
+    align-items: center;
   }
 
   .tool-btn {
@@ -155,11 +168,14 @@
     height: 20px;
   }
 
-  .color-picker {
+  .color-picker,
+  .stroke-width-picker,
+  .stroke-style-picker {
     position: relative;
   }
 
-  .color-dropdown {
+  .color-dropdown,
+  .stroke-dropdown {
     visibility: hidden;
     transform: scale(0.9) translateY(-10px);
     transition: all 100ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
@@ -179,7 +195,12 @@
     z-index: 200;
   }
 
-  .color-dropdown.visible {
+  .stroke-dropdown {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .color-dropdown.visible,
+  .stroke-dropdown.visible {
     opacity: 1;
     transform: translateX(-50%) scale(1) translateY(0);
     visibility: visible;
@@ -211,13 +232,14 @@
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
 
-  .stroke-btn, .style-btn {
+  .stroke-dropdown .stroke-btn,
+  .stroke-dropdown .style-btn {
     position: relative;
   }
 
-  .stroke-btn.active::after,
-  .style-btn.active::after {
-    content: '';
+  .stroke-dropdown .stroke-btn.active::after,
+  .stroke-dropdown .style-btn.active::after {
+    content: "";
     position: absolute;
     bottom: 2px;
     left: 50%;
@@ -229,7 +251,9 @@
   }
 
   #canvas-container.eraser-cursor {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.008 4.008 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53"/></svg>') 12 12, auto;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.008 4.008 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53"/></svg>')
+        12 12,
+      auto;
   }
 
   @media (max-width: 768px) {
@@ -339,60 +363,107 @@
 <div id="toolbar" class="noprint">
   <div class="tool-group">
     <button class="tool-btn active" data-tool="select" title="Select (V)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="eraser" title="Eraser (E)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.008 4.008 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          d="M16.24 3.56l4.95 4.94c.78.79.78 2.05 0 2.84L12 20.53a4.008 4.008 0 0 1-5.66 0L2.81 17c-.78-.79-.78-2.05 0-2.84l10.6-10.6c.79-.78 2.05-.78 2.83 0M4.22 15.58l3.54 3.53c.78.79 2.04.79 2.83 0l3.53-3.53"
+        />
       </svg>
     </button>
   </div>
 
   <div class="tool-group">
     <button class="tool-btn" data-tool="rectangle" title="Rectangle (R)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="circle" title="Circle (C)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="9"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="line" title="Line (L)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="19" x2="19" y2="5"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="5" y1="19" x2="19" y2="5" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="arrow" title="Arrow (A)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="5" y1="19" x2="19" y2="5"/>
-        <polyline points="19 12 19 5 12 5"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="5" y1="19" x2="19" y2="5" />
+        <polyline points="19 12 19 5 12 5" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="pen" title="Pen (P)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 19l7-7 3 3-7 7-3-3z"/>
-        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
-        <path d="M2 2l7.586 7.586"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+        <path d="M2 2l7.586 7.586" />
       </svg>
     </button>
   </div>
 
   <div class="tool-group">
     <button class="tool-btn" data-tool="text" title="Text (T)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="4 7 4 4 20 4 20 7"/>
-        <line x1="9" y1="20" x2="15" y2="20"/>
-        <line x1="12" y1="4" x2="12" y2="20"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="4 7 4 4 20 4 20 7" />
+        <line x1="9" y1="20" x2="15" y2="20" />
+        <line x1="12" y1="4" x2="12" y2="20" />
       </svg>
     </button>
     <button class="tool-btn" data-tool="sticky" title="Sticky Note (S)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/>
-        <path d="M21 14l-5 5v-5h5z"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M21 11V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" />
+        <path d="M21 14l-5 5v-5h5z" />
       </svg>
     </button>
   </div>
@@ -400,87 +471,275 @@
   <div class="tool-group">
     <div class="color-picker">
       <button class="tool-btn" id="stroke-color-btn" title="Stroke Color">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="8"/>
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="8" />
         </svg>
-        <div class="color-indicator" id="stroke-indicator" style="background: #000000; position: absolute; bottom: 2px; right: 2px;"></div>
+        <div
+          class="color-indicator"
+          id="stroke-indicator"
+          style="
+            background: #000000;
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+          "
+        ></div>
       </button>
       <div class="color-dropdown" id="stroke-dropdown">
-        <button class="color-swatch active" data-color="#000000" style="background: #000000" title="Black"></button>
-        <button class="color-swatch" data-color="#ff0000" style="background: #ff0000" title="Red"></button>
-        <button class="color-swatch" data-color="#00ff00" style="background: #00ff00" title="Green"></button>
-        <button class="color-swatch" data-color="#0000ff" style="background: #0000ff" title="Blue"></button>
-        <button class="color-swatch" data-color="#ffff00" style="background: #ffff00" title="Yellow"></button>
-        <button class="color-swatch" data-color="#00ffff" style="background: #00ffff" title="Cyan"></button>
-        <button class="color-swatch" data-color="#ff8800" style="background: #ff8800" title="Orange"></button>
-        <button class="color-swatch" data-color="#ffffff" style="background: #ffffff; border: 2px solid #ddd" title="White"></button>
+        <button
+          class="color-swatch active"
+          data-color="#000000"
+          style="background: #000000"
+          title="Black"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ff0000"
+          style="background: #ff0000"
+          title="Red"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#00ff00"
+          style="background: #00ff00"
+          title="Green"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#0000ff"
+          style="background: #0000ff"
+          title="Blue"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ffff00"
+          style="background: #ffff00"
+          title="Yellow"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#00ffff"
+          style="background: #00ffff"
+          title="Cyan"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ff8800"
+          style="background: #ff8800"
+          title="Orange"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ffffff"
+          style="background: #ffffff; border: 2px solid #ddd"
+          title="White"
+        ></button>
       </div>
     </div>
 
     <div class="color-picker">
       <button class="tool-btn" id="fill-color-btn" title="Fill Color">
         <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
-          <circle cx="12" cy="12" r="8"/>
+          <circle cx="12" cy="12" r="8" />
         </svg>
-        <div class="color-indicator" id="fill-indicator" style="background: transparent; border: 1px solid #000; position: absolute; bottom: 2px; right: 2px;"></div>
+        <div
+          class="color-indicator"
+          id="fill-indicator"
+          style="
+            background: transparent;
+            border: 1px solid #000;
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+          "
+        ></div>
       </button>
       <div class="color-dropdown" id="fill-dropdown">
-        <button class="color-swatch active" data-color="transparent" style="background: transparent; border: 2px solid #ddd" title="Transparent"></button>
-        <button class="color-swatch" data-color="#ff0000" style="background: #ff0000" title="Red"></button>
-        <button class="color-swatch" data-color="#00ff00" style="background: #00ff00" title="Green"></button>
-        <button class="color-swatch" data-color="#0000ff" style="background: #0000ff" title="Blue"></button>
-        <button class="color-swatch" data-color="#ffff00" style="background: #ffff00" title="Yellow"></button>
-        <button class="color-swatch" data-color="#00ffff" style="background: #00ffff" title="Cyan"></button>
-        <button class="color-swatch" data-color="#ff8800" style="background: #ff8800" title="Orange"></button>
-        <button class="color-swatch" data-color="#ffffff" style="background: #ffffff; border: 2px solid #ddd" title="White"></button>
+        <button
+          class="color-swatch active"
+          data-color="transparent"
+          style="background: transparent; border: 2px solid #ddd"
+          title="Transparent"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ff0000"
+          style="background: #ff0000"
+          title="Red"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#00ff00"
+          style="background: #00ff00"
+          title="Green"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#0000ff"
+          style="background: #0000ff"
+          title="Blue"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ffff00"
+          style="background: #ffff00"
+          title="Yellow"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#00ffff"
+          style="background: #00ffff"
+          title="Cyan"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ff8800"
+          style="background: #ff8800"
+          title="Orange"
+        ></button>
+        <button
+          class="color-swatch"
+          data-color="#ffffff"
+          style="background: #ffffff; border: 2px solid #ddd"
+          title="White"
+        ></button>
       </div>
     </div>
   </div>
 
   <div class="tool-group">
-    <button class="tool-btn stroke-btn active" data-width="2" title="Thin">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="4" y1="12" x2="20" y2="12"/>
-      </svg>
-    </button>
-    <button class="tool-btn stroke-btn" data-width="4" title="Medium">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
-        <line x1="4" y1="12" x2="20" y2="12"/>
-      </svg>
-    </button>
-    <button class="tool-btn stroke-btn" data-width="8" title="Thick">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="8">
-        <line x1="4" y1="12" x2="20" y2="12"/>
-      </svg>
-    </button>
+    <div class="stroke-width-picker">
+      <button class="tool-btn" id="stroke-width-btn" title="Stroke Width">
+        <svg
+          id="stroke-width-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+        >
+          <line x1="4" y1="7" x2="20" y2="7" stroke-width="2" />
+          <line x1="4" y1="12" x2="20" y2="12" stroke-width="4" />
+          <line x1="4" y1="17" x2="20" y2="17" stroke-width="6" />
+        </svg>
+      </button>
+      <div class="stroke-dropdown" id="stroke-width-dropdown">
+        <button class="tool-btn stroke-btn active" data-width="2" title="Thin">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <line x1="4" y1="12" x2="20" y2="12" />
+          </svg>
+        </button>
+        <button class="tool-btn stroke-btn" data-width="4" title="Medium">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="4"
+          >
+            <line x1="4" y1="12" x2="20" y2="12" />
+          </svg>
+        </button>
+        <button class="tool-btn stroke-btn" data-width="8" title="Thick">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="8"
+          >
+            <line x1="4" y1="12" x2="20" y2="12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="stroke-style-picker">
+      <button class="tool-btn" id="stroke-style-btn" title="Stroke Style">
+        <svg
+          id="stroke-style-icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3"
+        >
+          <line x1="4" y1="10" x2="20" y2="10" />
+          <line x1="4" y1="14" x2="20" y2="14" stroke-dasharray="3 2" />
+        </svg>
+      </button>
+      <div class="stroke-dropdown" id="stroke-style-dropdown">
+        <button
+          class="tool-btn style-btn active"
+          data-style="solid"
+          title="Solid"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+          >
+            <line x1="4" y1="12" x2="20" y2="12" />
+          </svg>
+        </button>
+        <button class="tool-btn style-btn" data-style="dashed" title="Dashed">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-dasharray="4 4"
+          >
+            <line x1="4" y1="12" x2="20" y2="12" />
+          </svg>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="tool-group">
-    <button class="tool-btn style-btn active" data-style="solid" title="Solid">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-        <line x1="4" y1="12" x2="20" y2="12"/>
-      </svg>
-    </button>
-    <button class="tool-btn style-btn" data-style="dashed" title="Dashed">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-dasharray="4 4">
-        <line x1="4" y1="12" x2="20" y2="12"/>
-      </svg>
-    </button>
-  </div>
-
-  <div class="tool-group">
+  <div class="tool-group github-buttons-group">
+    <a
+      class="github-button"
+      href="https://github.com/sanjayio/doodleboard"
+      data-color-scheme="no-preference: light; light: light; dark: dark;"
+      data-icon="octicon-star"
+      data-size="large"
+      data-show-count="true"
+      aria-label="Star sanjayio/doodleboard on GitHub"
+      >Star</a
+    >
+    <a
+      class="github-button"
+      href="https://github.com/sponsors/sanjayio"
+      data-color-scheme="no-preference: light; light: light; dark: dark;"
+      data-icon="octicon-heart"
+      data-size="large"
+      aria-label="Sponsor @sanjayio on GitHub"
+      >Sponsor</a
+    >
     <button class="tool-btn" id="menu-btn" title="Menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="1"/>
-        <circle cx="12" cy="5" r="1"/>
-        <circle cx="12" cy="19" r="1"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="1" />
+        <circle cx="12" cy="5" r="1" />
+        <circle cx="12" cy="19" r="1" />
       </svg>
     </button>
     <div id="menu">
       <a class="item" href="#new">New canvas</a>
-      <button class="item" id="clear-all">Clear all</button>
-      <a class="item" id="qr" href="/qr">Generate QR code</a>
-      <a class="item" href="https://github.com/sanjayio/doodleboard" target="_blank">GitHub</a>
+      <button class="item" id="clear-all">Clear All</button>
+      <a class="item" id="qr" href="/qr">Share</a>
+      <button class="item" id="export-png">Export</button>
     </div>
   </div>
 </div>
@@ -492,35 +751,35 @@
 <script>
   // ===== UTILITIES =====
   function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substring(2)
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
   }
 
   function debounce(ms, fn) {
-    let timer
+    let timer;
     return (...args) => {
-      clearTimeout(timer)
-      timer = setTimeout(() => fn(...args), ms)
-    }
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), ms);
+    };
   }
 
   async function compress(string) {
-    const byteArray = new TextEncoder().encode(string)
-    const stream = new CompressionStream('deflate-raw')
-    const writer = stream.writable.getWriter()
-    writer.write(byteArray)
-    writer.close()
-    const buffer = await new Response(stream.readable).arrayBuffer()
-    return new Uint8Array(buffer).toBase64({alphabet: 'base64url'})
+    const byteArray = new TextEncoder().encode(string);
+    const stream = new CompressionStream("deflate-raw");
+    const writer = stream.writable.getWriter();
+    writer.write(byteArray);
+    writer.close();
+    const buffer = await new Response(stream.readable).arrayBuffer();
+    return new Uint8Array(buffer).toBase64({ alphabet: "base64url" });
   }
 
   async function decompress(b64) {
-    const byteArray = Uint8Array.fromBase64(b64, {alphabet: 'base64url'})
-    const stream = new DecompressionStream('deflate-raw')
-    const writer = stream.writable.getWriter()
-    writer.write(byteArray)
-    writer.close()
-    const buffer = await new Response(stream.readable).arrayBuffer()
-    return new TextDecoder().decode(buffer)
+    const byteArray = Uint8Array.fromBase64(b64, { alphabet: "base64url" });
+    const stream = new DecompressionStream("deflate-raw");
+    const writer = stream.writable.getWriter();
+    writer.write(byteArray);
+    writer.close();
+    const buffer = await new Response(stream.readable).arrayBuffer();
+    return new TextDecoder().decode(buffer);
   }
 
   // ===== SERIALIZATION =====
@@ -529,60 +788,63 @@
     const cleanState = {
       version: 1,
       viewport: state.viewport,
-      elements: state.elements
-    }
+      elements: state.elements,
+    };
 
-    const json = JSON.stringify(cleanState)
-    const compressed = await compress(json)
-    return 'board:' + compressed
+    const json = JSON.stringify(cleanState);
+    const compressed = await compress(json);
+    return "board:" + compressed;
   }
 
   async function deserialize(hash) {
     try {
       // Remove leading # if present
-      hash = hash.startsWith('#') ? hash.substring(1) : hash
+      hash = hash.startsWith("#") ? hash.substring(1) : hash;
 
       // Check for board format
-      if (hash.startsWith('board:')) {
-        const compressed = hash.substring(6)
-        const json = await decompress(compressed)
-        const data = JSON.parse(json)
+      if (hash.startsWith("board:")) {
+        const compressed = hash.substring(6);
+        const json = await decompress(compressed);
+        const data = JSON.parse(json);
         return {
           version: 1,
           viewport: data.viewport || { x: 0, y: 0, zoom: 1 },
           elements: data.elements || [],
-          selectedIds: []
-        }
+          selectedIds: [],
+        };
       }
 
       // Unknown format - return empty canvas
-      return createEmptyCanvas()
+      return createEmptyCanvas();
     } catch (e) {
-      console.error('Failed to deserialize:', e)
-      return createEmptyCanvas()
+      console.error("Failed to deserialize:", e);
+      return createEmptyCanvas();
     }
   }
 
   // ===== STORAGE =====
-  const STORAGE_KEY = 'doodleboard'
+  const STORAGE_KEY = "doodleboard";
 
   async function save(state) {
     try {
-      const serialized = await serialize(state)
+      const serialized = await serialize(state);
 
       // Save to localStorage (primary storage)
-      localStorage.setItem(STORAGE_KEY, serialized)
+      localStorage.setItem(STORAGE_KEY, serialized);
 
       // Update URL hash (for sharing)
-      const hashData = '#' + serialized
-      if (hashData.length < 1000000) { // Warn if > 1MB
-        history.replaceState(null, '', hashData)
+      const hashData = "#" + serialized;
+      if (hashData.length < 1000000) {
+        // Warn if > 1MB
+        history.replaceState(null, "", hashData);
       } else {
-        console.warn('Canvas too large for URL (>1MB). Saved to localStorage only.')
-        history.replaceState(null, '', '#')
+        console.warn(
+          "Canvas too large for URL (>1MB). Saved to localStorage only."
+        );
+        history.replaceState(null, "", "#");
       }
     } catch (e) {
-      console.error('Failed to save:', e)
+      console.error("Failed to save:", e);
     }
   }
 
@@ -590,25 +852,25 @@
     try {
       // Priority 1: URL hash (for shared links)
       if (location.hash && location.hash.length > 1) {
-        const state = await deserialize(location.hash)
+        const state = await deserialize(location.hash);
         // Also save to localStorage
-        localStorage.setItem(STORAGE_KEY, await serialize(state))
-        return state
+        localStorage.setItem(STORAGE_KEY, await serialize(state));
+        return state;
       }
 
       // Priority 2: localStorage
-      const stored = localStorage.getItem(STORAGE_KEY)
+      const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        return await deserialize(stored)
+        return await deserialize(stored);
       }
     } catch (e) {
-      console.error('Failed to load:', e)
+      console.error("Failed to load:", e);
     }
 
-    return createEmptyCanvas()
+    return createEmptyCanvas();
   }
 
-  const debouncedSave = debounce(500, save)
+  const debouncedSave = debounce(500, save);
 
   // ===== STATE MANAGEMENT =====
   let state = {
@@ -616,25 +878,25 @@
     viewport: { x: 0, y: 0, zoom: 1 },
     elements: [],
     selectedIds: [],
-    preview: null
-  }
+    preview: null,
+  };
 
   function createEmptyCanvas() {
     // Create welcome sticky note for first-time users
     const welcomeSticky = {
       id: generateId(),
-      type: 'sticky',
+      type: "sticky",
       x: 50,
       y: 50,
       width: 300,
       height: 400,
       rotation: 0,
       zIndex: 0,
-      strokeColor: '#ffffff',
+      strokeColor: "#ffffff",
       strokeWidth: 2,
-      fillColor: '#ff0000',
+      fillColor: "#ff0000",
       opacity: 1,
-      strokeStyle: 'solid',
+      strokeStyle: "solid",
       props: {
         text: `Welcome to Doodleboard! 👋
 
@@ -658,424 +920,466 @@ Mouse wheel - Zoom
 
 💡 Your work auto-saves to localStorage AND the URL!
 
-Delete this note to start drawing!`
-      }
-    }
+Delete this note to start drawing!`,
+      },
+    };
 
     return {
       version: 1,
       viewport: { x: 0, y: 0, zoom: 1 },
       elements: [welcomeSticky],
-      selectedIds: []
-    }
+      selectedIds: [],
+    };
   }
 
   // ===== CANVAS RENDERER =====
   class CanvasRenderer {
     constructor(container) {
-      this.mainCanvas = container.querySelector('#main-canvas')
-      this.uiCanvas = container.querySelector('#ui-canvas')
-      this.mainCtx = this.mainCanvas.getContext('2d')
-      this.uiCtx = this.uiCanvas.getContext('2d')
-      this.dpr = window.devicePixelRatio || 1
+      this.mainCanvas = container.querySelector("#main-canvas");
+      this.uiCanvas = container.querySelector("#ui-canvas");
+      this.mainCtx = this.mainCanvas.getContext("2d");
+      this.uiCtx = this.uiCanvas.getContext("2d");
+      this.dpr = window.devicePixelRatio || 1;
 
-      this.setupCanvas(this.mainCanvas)
-      this.setupCanvas(this.uiCanvas)
+      this.setupCanvas(this.mainCanvas);
+      this.setupCanvas(this.uiCanvas);
 
-      window.addEventListener('resize', () => {
-        this.setupCanvas(this.mainCanvas)
-        this.setupCanvas(this.uiCanvas)
-        this.render(state)
-      })
+      window.addEventListener("resize", () => {
+        this.setupCanvas(this.mainCanvas);
+        this.setupCanvas(this.uiCanvas);
+        this.render(state);
+      });
     }
 
     setupCanvas(canvas) {
-      const rect = canvas.getBoundingClientRect()
-      canvas.width = rect.width * this.dpr
-      canvas.height = rect.height * this.dpr
-      canvas.style.width = rect.width + 'px'
-      canvas.style.height = rect.height + 'px'
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * this.dpr;
+      canvas.height = rect.height * this.dpr;
+      canvas.style.width = rect.width + "px";
+      canvas.style.height = rect.height + "px";
     }
 
     clear(ctx) {
-      ctx.save()
-      ctx.setTransform(1, 0, 0, 1, 0, 0)
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      ctx.restore()
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      ctx.restore();
     }
 
     render(state) {
-      this.clear(this.mainCtx)
-      this.clear(this.uiCtx)
+      this.clear(this.mainCtx);
+      this.clear(this.uiCtx);
 
-      const ctx = this.mainCtx
-      ctx.save()
+      const ctx = this.mainCtx;
+      ctx.save();
 
       // Reapply DPI scaling after clear
-      ctx.scale(this.dpr, this.dpr)
+      ctx.scale(this.dpr, this.dpr);
 
       // Apply viewport transform
-      ctx.translate(state.viewport.x, state.viewport.y)
-      ctx.scale(state.viewport.zoom, state.viewport.zoom)
+      ctx.translate(state.viewport.x, state.viewport.y);
+      ctx.scale(state.viewport.zoom, state.viewport.zoom);
 
       // Sort by z-index
-      const sorted = [...state.elements].sort((a, b) => a.zIndex - b.zIndex)
+      const sorted = [...state.elements].sort((a, b) => a.zIndex - b.zIndex);
 
       // Render all elements
-      sorted.forEach(el => this.renderElement(ctx, el))
+      sorted.forEach((el) => this.renderElement(ctx, el));
 
       // Render preview if exists
       if (state.preview) {
-        this.renderElement(ctx, state.preview)
+        this.renderElement(ctx, state.preview);
       }
 
-      ctx.restore()
+      ctx.restore();
 
       // Render selection on UI canvas
       if (state.selectedIds.length > 0) {
-        this.renderSelection(state)
+        this.renderSelection(state);
       }
     }
 
     renderElement(ctx, element) {
-      ctx.save()
+      ctx.save();
 
-      ctx.translate(element.x, element.y)
-      ctx.rotate((element.rotation || 0) * Math.PI / 180)
+      ctx.translate(element.x, element.y);
+      ctx.rotate(((element.rotation || 0) * Math.PI) / 180);
 
-      ctx.strokeStyle = element.strokeColor
-      ctx.lineWidth = element.strokeWidth
-      ctx.fillStyle = element.fillColor
-      ctx.globalAlpha = element.opacity || 1
+      ctx.strokeStyle = element.strokeColor;
+      ctx.lineWidth = element.strokeWidth;
+      ctx.fillStyle = element.fillColor;
+      ctx.globalAlpha = element.opacity || 1;
 
       // Set line dash for dashed stroke style
-      if (element.strokeStyle === 'dashed') {
-        ctx.setLineDash([8, 8])
+      if (element.strokeStyle === "dashed") {
+        ctx.setLineDash([8, 8]);
       } else {
-        ctx.setLineDash([])
+        ctx.setLineDash([]);
       }
 
       switch (element.type) {
-        case 'rectangle':
-          if (element.fillColor !== 'transparent') {
-            ctx.fillRect(0, 0, element.width, element.height)
+        case "rectangle":
+          if (element.fillColor !== "transparent") {
+            ctx.fillRect(0, 0, element.width, element.height);
           }
           if (element.strokeWidth > 0) {
-            ctx.strokeRect(0, 0, element.width, element.height)
+            ctx.strokeRect(0, 0, element.width, element.height);
           }
-          break
+          break;
 
-        case 'circle':
-          ctx.beginPath()
-          const radius = Math.min(element.width, element.height) / 2
-          ctx.arc(element.width / 2, element.height / 2, radius, 0, Math.PI * 2)
-          if (element.fillColor !== 'transparent') {
-            ctx.fill()
+        case "circle":
+          ctx.beginPath();
+          const radius = Math.min(element.width, element.height) / 2;
+          ctx.arc(
+            element.width / 2,
+            element.height / 2,
+            radius,
+            0,
+            Math.PI * 2
+          );
+          if (element.fillColor !== "transparent") {
+            ctx.fill();
           }
           if (element.strokeWidth > 0) {
-            ctx.stroke()
+            ctx.stroke();
           }
-          break
+          break;
 
-        case 'line':
-        case 'arrow':
-          ctx.beginPath()
-          ctx.moveTo(element.props.startX, element.props.startY)
-          ctx.lineTo(element.props.endX, element.props.endY)
-          ctx.stroke()
+        case "line":
+        case "arrow":
+          ctx.beginPath();
+          ctx.moveTo(element.props.startX, element.props.startY);
+          ctx.lineTo(element.props.endX, element.props.endY);
+          ctx.stroke();
 
-          if (element.type === 'arrow') {
+          if (element.type === "arrow") {
             // Draw arrowhead
-            const angle = Math.atan2(element.props.endY - element.props.startY, element.props.endX - element.props.startX)
-            const headLength = 15
-            ctx.beginPath()
-            ctx.moveTo(element.props.endX, element.props.endY)
+            const angle = Math.atan2(
+              element.props.endY - element.props.startY,
+              element.props.endX - element.props.startX
+            );
+            const headLength = 15;
+            ctx.beginPath();
+            ctx.moveTo(element.props.endX, element.props.endY);
             ctx.lineTo(
               element.props.endX - headLength * Math.cos(angle - Math.PI / 6),
               element.props.endY - headLength * Math.sin(angle - Math.PI / 6)
-            )
-            ctx.moveTo(element.props.endX, element.props.endY)
+            );
+            ctx.moveTo(element.props.endX, element.props.endY);
             ctx.lineTo(
               element.props.endX - headLength * Math.cos(angle + Math.PI / 6),
               element.props.endY - headLength * Math.sin(angle + Math.PI / 6)
-            )
-            ctx.stroke()
+            );
+            ctx.stroke();
           }
-          break
+          break;
 
-        case 'path':
+        case "path":
           if (element.props.points && element.props.points.length > 1) {
-            ctx.beginPath()
-            ctx.moveTo(element.props.points[0][0], element.props.points[0][1])
+            ctx.beginPath();
+            ctx.moveTo(element.props.points[0][0], element.props.points[0][1]);
             for (let i = 1; i < element.props.points.length; i++) {
-              ctx.lineTo(element.props.points[i][0], element.props.points[i][1])
+              ctx.lineTo(
+                element.props.points[i][0],
+                element.props.points[i][1]
+              );
             }
-            ctx.stroke()
+            ctx.stroke();
           }
-          break
+          break;
 
-        case 'text':
-        case 'sticky':
+        case "text":
+        case "sticky":
           // Background for sticky notes
-          if (element.type === 'sticky' && element.props.backgroundColor) {
-            ctx.fillStyle = element.props.backgroundColor
-            ctx.fillRect(0, 0, element.width, element.height)
+          if (element.type === "sticky" && element.props.backgroundColor) {
+            ctx.fillStyle = element.props.backgroundColor;
+            ctx.fillRect(0, 0, element.width, element.height);
             // Border for sticky
-            ctx.strokeStyle = '#d4c5a9'
-            ctx.lineWidth = 1
-            ctx.strokeRect(0, 0, element.width, element.height)
+            ctx.strokeStyle = "#d4c5a9";
+            ctx.lineWidth = 1;
+            ctx.strokeRect(0, 0, element.width, element.height);
           }
 
           // Render text
           if (element.props.text) {
-            ctx.fillStyle = element.strokeColor
-            ctx.font = `${element.props.fontSize || 16}px ${element.props.fontFamily || 'system-ui'}`
-            ctx.textBaseline = 'top'
-            ctx.textAlign = element.props.textAlign || 'left'
+            ctx.fillStyle = element.strokeColor;
+            ctx.font = `${element.props.fontSize || 16}px ${
+              element.props.fontFamily || "system-ui"
+            }`;
+            ctx.textBaseline = "top";
+            ctx.textAlign = element.props.textAlign || "left";
 
-            const lines = this.wrapText(element.props.text, element.width - 10, ctx)
-            const lineHeight = (element.props.fontSize || 16) * 1.5
+            const lines = this.wrapText(
+              element.props.text,
+              element.width - 10,
+              ctx
+            );
+            const lineHeight = (element.props.fontSize || 16) * 1.5;
 
             lines.forEach((line, i) => {
-              ctx.fillText(line, 5, 5 + i * lineHeight)
-            })
+              ctx.fillText(line, 5, 5 + i * lineHeight);
+            });
           }
-          break
+          break;
       }
 
-      ctx.restore()
+      ctx.restore();
     }
 
     wrapText(text, maxWidth, ctx) {
-      const lines = text.split('\n')
-      const wrappedLines = []
+      const lines = text.split("\n");
+      const wrappedLines = [];
 
-      lines.forEach(line => {
+      lines.forEach((line) => {
         if (!line) {
-          wrappedLines.push('')
-          return
+          wrappedLines.push("");
+          return;
         }
 
-        const words = line.split(' ')
-        let currentLine = ''
+        const words = line.split(" ");
+        let currentLine = "";
 
-        words.forEach(word => {
-          const testLine = currentLine + (currentLine ? ' ' : '') + word
-          const metrics = ctx.measureText(testLine)
+        words.forEach((word) => {
+          const testLine = currentLine + (currentLine ? " " : "") + word;
+          const metrics = ctx.measureText(testLine);
 
           if (metrics.width > maxWidth && currentLine) {
-            wrappedLines.push(currentLine)
-            currentLine = word
+            wrappedLines.push(currentLine);
+            currentLine = word;
           } else {
-            currentLine = testLine
+            currentLine = testLine;
           }
-        })
+        });
 
         if (currentLine) {
-          wrappedLines.push(currentLine)
+          wrappedLines.push(currentLine);
         }
-      })
+      });
 
-      return wrappedLines
+      return wrappedLines;
     }
 
     renderSelection(state) {
-      const ctx = this.uiCtx
-      ctx.save()
+      const ctx = this.uiCtx;
+      ctx.save();
 
       // Reapply DPI scaling after clear
-      ctx.scale(this.dpr, this.dpr)
+      ctx.scale(this.dpr, this.dpr);
 
-      ctx.translate(state.viewport.x, state.viewport.y)
-      ctx.scale(state.viewport.zoom, state.viewport.zoom)
+      ctx.translate(state.viewport.x, state.viewport.y);
+      ctx.scale(state.viewport.zoom, state.viewport.zoom);
 
-      state.selectedIds.forEach(id => {
-        const el = state.elements.find(e => e.id === id)
-        if (!el) return
+      state.selectedIds.forEach((id) => {
+        const el = state.elements.find((e) => e.id === id);
+        if (!el) return;
 
-        ctx.save()
-        ctx.translate(el.x, el.y)
-        ctx.rotate((el.rotation || 0) * Math.PI / 180)
+        ctx.save();
+        ctx.translate(el.x, el.y);
+        ctx.rotate(((el.rotation || 0) * Math.PI) / 180);
 
-        ctx.strokeStyle = '#0569fa'
-        ctx.lineWidth = 2 / state.viewport.zoom
-        ctx.setLineDash([5, 5])
+        ctx.strokeStyle = "#0569fa";
+        ctx.lineWidth = 2 / state.viewport.zoom;
+        ctx.setLineDash([5, 5]);
 
         // For lines and arrows, calculate proper bounds
-        let boxX = -5, boxY = -5, boxW = el.width + 10, boxH = el.height + 10
-        if (el.type === 'line' || el.type === 'arrow') {
-          const minX = Math.min(el.props.startX, el.props.endX)
-          const minY = Math.min(el.props.startY, el.props.endY)
-          const maxX = Math.max(el.props.startX, el.props.endX)
-          const maxY = Math.max(el.props.startY, el.props.endY)
-          boxX = minX - 5
-          boxY = minY - 5
-          boxW = (maxX - minX) + 10
-          boxH = (maxY - minY) + 10
+        let boxX = -5,
+          boxY = -5,
+          boxW = el.width + 10,
+          boxH = el.height + 10;
+        if (el.type === "line" || el.type === "arrow") {
+          const minX = Math.min(el.props.startX, el.props.endX);
+          const minY = Math.min(el.props.startY, el.props.endY);
+          const maxX = Math.max(el.props.startX, el.props.endX);
+          const maxY = Math.max(el.props.startY, el.props.endY);
+          boxX = minX - 5;
+          boxY = minY - 5;
+          boxW = maxX - minX + 10;
+          boxH = maxY - minY + 10;
         }
 
-        ctx.strokeRect(boxX, boxY, boxW, boxH)
+        ctx.strokeRect(boxX, boxY, boxW, boxH);
 
         // Draw resize handles (not for lines/arrows for now)
-        if (el.type !== 'line' && el.type !== 'arrow' && el.type !== 'path') {
-          ctx.setLineDash([])
-          ctx.fillStyle = '#fff'
-          const handleSize = 8 / state.viewport.zoom
+        if (el.type !== "line" && el.type !== "arrow" && el.type !== "path") {
+          ctx.setLineDash([]);
+          ctx.fillStyle = "#fff";
+          const handleSize = 8 / state.viewport.zoom;
           const positions = [
-            [-5, -5], [el.width / 2, -5], [el.width + 5, -5],
-            [-5, el.height / 2], [el.width + 5, el.height / 2],
-            [-5, el.height + 5], [el.width / 2, el.height + 5], [el.width + 5, el.height + 5]
-          ]
+            [-5, -5],
+            [el.width / 2, -5],
+            [el.width + 5, -5],
+            [-5, el.height / 2],
+            [el.width + 5, el.height / 2],
+            [-5, el.height + 5],
+            [el.width / 2, el.height + 5],
+            [el.width + 5, el.height + 5],
+          ];
 
           positions.forEach(([x, y]) => {
-            ctx.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize)
-            ctx.strokeRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize)
-          })
+            ctx.fillRect(
+              x - handleSize / 2,
+              y - handleSize / 2,
+              handleSize,
+              handleSize
+            );
+            ctx.strokeRect(
+              x - handleSize / 2,
+              y - handleSize / 2,
+              handleSize,
+              handleSize
+            );
+          });
         }
 
-        ctx.restore()
-      })
+        ctx.restore();
+      });
 
-      ctx.restore()
+      ctx.restore();
     }
   }
 
   // ===== TEXT EDITOR =====
   class TextEditor {
     constructor() {
-      this.overlay = null
-      this.activeElement = null
-      this.onFinish = null
+      this.overlay = null;
+      this.activeElement = null;
+      this.onFinish = null;
     }
 
     startEdit(element, canvasPos, viewport, onFinish) {
-      this.activeElement = element
-      this.onFinish = onFinish
+      this.activeElement = element;
+      this.onFinish = onFinish;
 
       // Create textarea overlay
-      this.overlay = document.createElement('textarea')
-      this.overlay.style.position = 'fixed'
-      this.overlay.style.left = (canvasPos.x + element.x * viewport.zoom + viewport.x) + 'px'
-      this.overlay.style.top = (canvasPos.y + element.y * viewport.zoom + viewport.y) + 'px'
-      this.overlay.style.width = (element.width * viewport.zoom) + 'px'
-      this.overlay.style.minHeight = (element.height * viewport.zoom) + 'px'
-      this.overlay.style.fontSize = ((element.props.fontSize || 16) * viewport.zoom) + 'px'
-      this.overlay.style.fontFamily = element.props.fontFamily || 'system-ui'
-      this.overlay.style.color = element.strokeColor || '#000'
-      this.overlay.style.background = element.type === 'sticky' ? (element.props.backgroundColor || '#fef68a') : '#fff'
-      this.overlay.style.border = '2px solid #0569fa'
-      this.overlay.style.outline = 'none'
-      this.overlay.style.padding = '5px'
-      this.overlay.style.resize = 'none'
-      this.overlay.style.overflow = 'auto'
-      this.overlay.style.zIndex = '10000'
-      this.overlay.style.borderRadius = '4px'
-      this.overlay.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'
-      this.overlay.value = element.props.text || ''
-      this.overlay.setAttribute('spellcheck', 'false')
+      this.overlay = document.createElement("textarea");
+      this.overlay.style.position = "fixed";
+      this.overlay.style.left =
+        canvasPos.x + element.x * viewport.zoom + viewport.x + "px";
+      this.overlay.style.top =
+        canvasPos.y + element.y * viewport.zoom + viewport.y + "px";
+      this.overlay.style.width = element.width * viewport.zoom + "px";
+      this.overlay.style.minHeight = element.height * viewport.zoom + "px";
+      this.overlay.style.fontSize =
+        (element.props.fontSize || 16) * viewport.zoom + "px";
+      this.overlay.style.fontFamily = element.props.fontFamily || "system-ui";
+      this.overlay.style.color = element.strokeColor || "#000";
+      this.overlay.style.background =
+        element.type === "sticky"
+          ? element.props.backgroundColor || "#fef68a"
+          : "#fff";
+      this.overlay.style.border = "2px solid #0569fa";
+      this.overlay.style.outline = "none";
+      this.overlay.style.padding = "5px";
+      this.overlay.style.resize = "none";
+      this.overlay.style.overflow = "auto";
+      this.overlay.style.zIndex = "10000";
+      this.overlay.style.borderRadius = "4px";
+      this.overlay.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+      this.overlay.value = element.props.text || "";
+      this.overlay.setAttribute("spellcheck", "false");
 
-      document.body.appendChild(this.overlay)
+      document.body.appendChild(this.overlay);
 
       // Focus after a short delay to ensure it's rendered
       setTimeout(() => {
-        this.overlay.focus()
-        this.overlay.select()
-      }, 10)
+        this.overlay.focus();
+        this.overlay.select();
+      }, 10);
 
       // Handle blur to finish editing
-      const blurHandler = () => this.finishEdit()
-      this.overlay.addEventListener('blur', blurHandler)
+      const blurHandler = () => this.finishEdit();
+      this.overlay.addEventListener("blur", blurHandler);
 
       // Handle Enter key (with Shift for new lines)
       const keyHandler = (e) => {
-        if (e.code === 'Enter' && !e.shiftKey && element.type === 'text') {
-          e.preventDefault()
-          this.finishEdit()
+        if (e.code === "Enter" && !e.shiftKey && element.type === "text") {
+          e.preventDefault();
+          this.finishEdit();
         }
-        if (e.code === 'Escape') {
-          this.cancelEdit()
+        if (e.code === "Escape") {
+          this.cancelEdit();
         }
-      }
-      this.overlay.addEventListener('keydown', keyHandler)
+      };
+      this.overlay.addEventListener("keydown", keyHandler);
 
       // Auto-resize
       const inputHandler = () => {
-        this.overlay.style.height = 'auto'
-        this.overlay.style.height = this.overlay.scrollHeight + 'px'
-      }
-      this.overlay.addEventListener('input', inputHandler)
+        this.overlay.style.height = "auto";
+        this.overlay.style.height = this.overlay.scrollHeight + "px";
+      };
+      this.overlay.addEventListener("input", inputHandler);
     }
 
     finishEdit() {
-      if (!this.overlay || !this.activeElement) return
+      if (!this.overlay || !this.activeElement) return;
 
-      const newText = this.overlay.value
-      this.activeElement.props.text = newText
+      const newText = this.overlay.value;
+      this.activeElement.props.text = newText;
 
       // Update element size based on content
-      const metrics = this.measureText(newText, this.activeElement.props)
-      if (this.activeElement.type === 'text') {
-        this.activeElement.width = Math.max(metrics.width, 50)
-        this.activeElement.height = Math.max(metrics.height, 20)
+      const metrics = this.measureText(newText, this.activeElement.props);
+      if (this.activeElement.type === "text") {
+        this.activeElement.width = Math.max(metrics.width, 50);
+        this.activeElement.height = Math.max(metrics.height, 20);
       }
       // Sticky notes keep fixed size
 
-      this.cleanup()
-      if (this.onFinish) this.onFinish()
+      this.cleanup();
+      if (this.onFinish) this.onFinish();
     }
 
     cancelEdit() {
-      this.cleanup()
-      if (this.onFinish) this.onFinish()
+      this.cleanup();
+      if (this.onFinish) this.onFinish();
     }
 
     cleanup() {
       if (this.overlay) {
-        this.overlay.remove()
-        this.overlay = null
+        this.overlay.remove();
+        this.overlay = null;
       }
-      this.activeElement = null
-      this.onFinish = null
+      this.activeElement = null;
+      this.onFinish = null;
     }
 
     measureText(text, props) {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      ctx.font = `${props.fontSize || 16}px ${props.fontFamily || 'system-ui'}`
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      ctx.font = `${props.fontSize || 16}px ${props.fontFamily || "system-ui"}`;
 
-      const lines = text.split('\n')
-      let maxWidth = 0
-      lines.forEach(line => {
-        const metrics = ctx.measureText(line)
-        maxWidth = Math.max(maxWidth, metrics.width)
-      })
+      const lines = text.split("\n");
+      let maxWidth = 0;
+      lines.forEach((line) => {
+        const metrics = ctx.measureText(line);
+        maxWidth = Math.max(maxWidth, metrics.width);
+      });
 
-      const lineHeight = (props.fontSize || 16) * 1.5
-      const height = lines.length * lineHeight
+      const lineHeight = (props.fontSize || 16) * 1.5;
+      const height = lines.length * lineHeight;
 
       return {
         width: maxWidth + 20, // padding
-        height: height + 10
-      }
+        height: height + 10,
+      };
     }
   }
 
   // ===== TOOL SYSTEM =====
   class ShapeTool {
     constructor(shapeType) {
-      this.type = shapeType
-      this.startPos = null
-      this.previewElement = null
+      this.type = shapeType;
+      this.startPos = null;
+      this.previewElement = null;
     }
 
     handlePointerDown(e, state, options) {
       this.startPos = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
       this.previewElement = {
-        id: 'preview',
+        id: "preview",
         type: this.type,
         x: this.startPos.x,
         y: this.startPos.y,
@@ -1087,78 +1391,88 @@ Delete this note to start drawing!`
         strokeWidth: options.strokeWidth,
         fillColor: options.fillColor,
         strokeStyle: options.strokeStyle,
-        opacity: 1
-      }
+        opacity: 1,
+      };
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerMove(e, state, options) {
-      if (!this.startPos || !this.previewElement) return state
+      if (!this.startPos || !this.previewElement) return state;
 
-      const currentX = (e.offsetX - state.viewport.x) / state.viewport.zoom
-      const currentY = (e.offsetY - state.viewport.y) / state.viewport.zoom
+      const currentX = (e.offsetX - state.viewport.x) / state.viewport.zoom;
+      const currentY = (e.offsetY - state.viewport.y) / state.viewport.zoom;
 
-      const width = currentX - this.startPos.x
-      const height = currentY - this.startPos.y
+      const width = currentX - this.startPos.x;
+      const height = currentY - this.startPos.y;
 
-      this.previewElement.x = width < 0 ? currentX : this.startPos.x
-      this.previewElement.y = height < 0 ? currentY : this.startPos.y
-      this.previewElement.width = Math.abs(width)
-      this.previewElement.height = Math.abs(height)
+      this.previewElement.x = width < 0 ? currentX : this.startPos.x;
+      this.previewElement.y = height < 0 ? currentY : this.startPos.y;
+      this.previewElement.width = Math.abs(width);
+      this.previewElement.height = Math.abs(height);
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerUp(e, state, options) {
-      if (!this.previewElement || this.previewElement.width < 5 || this.previewElement.height < 5) {
-        this.startPos = null
-        this.previewElement = null
-        return { ...state, preview: null }
+      if (
+        !this.previewElement ||
+        this.previewElement.width < 5 ||
+        this.previewElement.height < 5
+      ) {
+        this.startPos = null;
+        this.previewElement = null;
+        return { ...state, preview: null };
       }
 
       const newElement = {
         ...this.previewElement,
         id: generateId(),
-        zIndex: state.elements.length + 1
-      }
+        zIndex: state.elements.length + 1,
+      };
 
-      this.startPos = null
-      this.previewElement = null
+      this.startPos = null;
+      this.previewElement = null;
 
       // Auto-switch to select tool after creating shape
       if (window.toolManager) {
-        window.toolManager.setTool('select')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="select"]')?.classList.add('active')
-        document.querySelector('#canvas-container')?.classList.remove('eraser-cursor')
+        window.toolManager.setTool("select");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="select"]')
+          ?.classList.add("active");
+        document
+          .querySelector("#canvas-container")
+          ?.classList.remove("eraser-cursor");
       }
 
       return {
         ...state,
         elements: [...state.elements, newElement],
         preview: null,
-        selectedIds: [newElement.id]
-      }
+        selectedIds: [newElement.id],
+      };
     }
   }
 
   class LineTool {
     constructor(isArrow = false) {
-      this.isArrow = isArrow
-      this.startPos = null
-      this.previewElement = null
+      this.isArrow = isArrow;
+      this.startPos = null;
+      this.previewElement = null;
     }
 
     handlePointerDown(e, state, options) {
       this.startPos = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
       this.previewElement = {
-        id: 'preview',
-        type: this.isArrow ? 'arrow' : 'line',
+        id: "preview",
+        type: this.isArrow ? "arrow" : "line",
         x: this.startPos.x,
         y: this.startPos.y,
         width: 0,
@@ -1167,85 +1481,91 @@ Delete this note to start drawing!`
         zIndex: 9999,
         strokeColor: options.strokeColor,
         strokeWidth: options.strokeWidth,
-        fillColor: 'transparent',
+        fillColor: "transparent",
         strokeStyle: options.strokeStyle,
         opacity: 1,
         props: {
           startX: 0,
           startY: 0,
           endX: 0,
-          endY: 0
-        }
-      }
+          endY: 0,
+        },
+      };
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerMove(e, state, options) {
-      if (!this.startPos || !this.previewElement) return state
+      if (!this.startPos || !this.previewElement) return state;
 
-      const currentX = (e.offsetX - state.viewport.x) / state.viewport.zoom
-      const currentY = (e.offsetY - state.viewport.y) / state.viewport.zoom
+      const currentX = (e.offsetX - state.viewport.x) / state.viewport.zoom;
+      const currentY = (e.offsetY - state.viewport.y) / state.viewport.zoom;
 
-      this.previewElement.props.endX = currentX - this.startPos.x
-      this.previewElement.props.endY = currentY - this.startPos.y
-      this.previewElement.width = Math.abs(this.previewElement.props.endX)
-      this.previewElement.height = Math.abs(this.previewElement.props.endY)
+      this.previewElement.props.endX = currentX - this.startPos.x;
+      this.previewElement.props.endY = currentY - this.startPos.y;
+      this.previewElement.width = Math.abs(this.previewElement.props.endX);
+      this.previewElement.height = Math.abs(this.previewElement.props.endY);
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerUp(e, state, options) {
       if (!this.previewElement) {
-        this.startPos = null
-        return { ...state, preview: null }
+        this.startPos = null;
+        return { ...state, preview: null };
       }
 
       const newElement = {
         ...this.previewElement,
         id: generateId(),
-        zIndex: state.elements.length + 1
-      }
+        zIndex: state.elements.length + 1,
+      };
 
-      this.startPos = null
-      this.previewElement = null
+      this.startPos = null;
+      this.previewElement = null;
 
       // Auto-switch to select tool
       if (window.toolManager) {
-        window.toolManager.setTool('select')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="select"]')?.classList.add('active')
-        document.querySelector('#canvas-container')?.classList.remove('eraser-cursor')
+        window.toolManager.setTool("select");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="select"]')
+          ?.classList.add("active");
+        document
+          .querySelector("#canvas-container")
+          ?.classList.remove("eraser-cursor");
       }
 
       return {
         ...state,
         elements: [...state.elements, newElement],
         preview: null,
-        selectedIds: [newElement.id]
-      }
+        selectedIds: [newElement.id],
+      };
     }
   }
 
   class PenTool {
     constructor() {
-      this.isDrawing = false
-      this.points = []
-      this.previewElement = null
+      this.isDrawing = false;
+      this.points = [];
+      this.previewElement = null;
     }
 
     handlePointerDown(e, state, options) {
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
-      this.isDrawing = true
-      this.points = [point]
+      this.isDrawing = true;
+      this.points = [point];
 
       this.previewElement = {
-        id: 'preview',
-        type: 'path',
+        id: "preview",
+        type: "path",
         x: point.x,
         y: point.y,
         width: 0,
@@ -1254,142 +1574,156 @@ Delete this note to start drawing!`
         zIndex: 9999,
         strokeColor: options.strokeColor,
         strokeWidth: options.strokeWidth,
-        fillColor: 'transparent',
+        fillColor: "transparent",
         strokeStyle: options.strokeStyle,
         opacity: 1,
         props: {
-          points: [[0, 0]]
-        }
-      }
+          points: [[0, 0]],
+        },
+      };
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerMove(e, state, options) {
-      if (!this.isDrawing || !this.previewElement) return state
+      if (!this.isDrawing || !this.previewElement) return state;
 
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
-      this.points.push(point)
+      this.points.push(point);
 
       // Calculate bounds
-      let minX = this.points[0].x, minY = this.points[0].y
-      let maxX = minX, maxY = minY
+      let minX = this.points[0].x,
+        minY = this.points[0].y;
+      let maxX = minX,
+        maxY = minY;
 
-      this.points.forEach(p => {
-        minX = Math.min(minX, p.x)
-        minY = Math.min(minY, p.y)
-        maxX = Math.max(maxX, p.x)
-        maxY = Math.max(maxY, p.y)
-      })
+      this.points.forEach((p) => {
+        minX = Math.min(minX, p.x);
+        minY = Math.min(minY, p.y);
+        maxX = Math.max(maxX, p.x);
+        maxY = Math.max(maxY, p.y);
+      });
 
-      this.previewElement.x = minX
-      this.previewElement.y = minY
-      this.previewElement.width = maxX - minX
-      this.previewElement.height = maxY - minY
+      this.previewElement.x = minX;
+      this.previewElement.y = minY;
+      this.previewElement.width = maxX - minX;
+      this.previewElement.height = maxY - minY;
 
       // Convert to relative coordinates
-      this.previewElement.props.points = this.points.map(p => [
+      this.previewElement.props.points = this.points.map((p) => [
         p.x - minX,
-        p.y - minY
-      ])
+        p.y - minY,
+      ]);
 
-      return { ...state, preview: this.previewElement }
+      return { ...state, preview: this.previewElement };
     }
 
     handlePointerUp(e, state, options) {
       if (!this.previewElement || this.points.length < 2) {
-        this.isDrawing = false
-        this.points = []
-        this.previewElement = null
-        return { ...state, preview: null }
+        this.isDrawing = false;
+        this.points = [];
+        this.previewElement = null;
+        return { ...state, preview: null };
       }
 
       const newElement = {
         ...this.previewElement,
         id: generateId(),
-        zIndex: state.elements.length + 1
-      }
+        zIndex: state.elements.length + 1,
+      };
 
-      this.isDrawing = false
-      this.points = []
-      this.previewElement = null
+      this.isDrawing = false;
+      this.points = [];
+      this.previewElement = null;
 
       // Auto-switch to select tool
       if (window.toolManager) {
-        window.toolManager.setTool('select')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="select"]')?.classList.add('active')
-        document.querySelector('#canvas-container')?.classList.remove('eraser-cursor')
+        window.toolManager.setTool("select");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="select"]')
+          ?.classList.add("active");
+        document
+          .querySelector("#canvas-container")
+          ?.classList.remove("eraser-cursor");
       }
 
       return {
         ...state,
         elements: [...state.elements, newElement],
         preview: null,
-        selectedIds: [newElement.id]
-      }
+        selectedIds: [newElement.id],
+      };
     }
   }
 
   class TextTool {
     constructor(isSticky = false) {
-      this.isSticky = isSticky
+      this.isSticky = isSticky;
     }
 
     handlePointerDown(e, state, options) {
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
       const newElement = {
         id: generateId(),
-        type: this.isSticky ? 'sticky' : 'text',
+        type: this.isSticky ? "sticky" : "text",
         x: point.x,
         y: point.y,
         width: this.isSticky ? 200 : 150,
         height: this.isSticky ? 150 : 30,
         rotation: 0,
         zIndex: state.elements.length + 1,
-        strokeColor: '#000000',
+        strokeColor: "#000000",
         strokeWidth: 0,
-        fillColor: 'transparent',
+        fillColor: "transparent",
         opacity: 1,
         props: {
-          text: '',
+          text: "",
           fontSize: 16,
-          fontFamily: 'system-ui',
-          textAlign: 'left',
-          backgroundColor: this.isSticky ? '#fef68a' : 'transparent'
-        }
-      }
+          fontFamily: "system-ui",
+          textAlign: "left",
+          backgroundColor: this.isSticky ? "#fef68a" : "transparent",
+        },
+      };
 
       // Auto-switch to select tool
       if (window.toolManager) {
-        window.toolManager.setTool('select')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="select"]')?.classList.add('active')
-        document.querySelector('#canvas-container')?.classList.remove('eraser-cursor')
+        window.toolManager.setTool("select");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="select"]')
+          ?.classList.add("active");
+        document
+          .querySelector("#canvas-container")
+          ?.classList.remove("eraser-cursor");
       }
 
       return {
         ...state,
         elements: [...state.elements, newElement],
         selectedIds: [newElement.id],
-        editingTextId: newElement.id
-      }
+        editingTextId: newElement.id,
+      };
     }
 
     handlePointerMove(e, state, options) {
-      return state
+      return state;
     }
 
     handlePointerUp(e, state, options) {
-      return state
+      return state;
     }
   }
 
@@ -1397,175 +1731,195 @@ Delete this note to start drawing!`
     handlePointerDown(e, state, options) {
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
       // Find and remove clicked element
       for (let i = state.elements.length - 1; i >= 0; i--) {
-        const el = state.elements[i]
-        if (point.x >= el.x && point.x <= el.x + el.width &&
-            point.y >= el.y && point.y <= el.y + el.height) {
+        const el = state.elements[i];
+        if (
+          point.x >= el.x &&
+          point.x <= el.x + el.width &&
+          point.y >= el.y &&
+          point.y <= el.y + el.height
+        ) {
           return {
             ...state,
-            elements: state.elements.filter(elem => elem.id !== el.id),
-            selectedIds: []
-          }
+            elements: state.elements.filter((elem) => elem.id !== el.id),
+            selectedIds: [],
+          };
         }
       }
-      return state
+      return state;
     }
 
     handlePointerMove(e, state, options) {
-      return state
+      return state;
     }
 
     handlePointerUp(e, state, options) {
-      return state
+      return state;
     }
   }
 
   class SelectTool {
     constructor() {
-      this.dragStart = null
-      this.dragElement = null
-      this.initialPos = null
-      this.resizeHandle = null
+      this.dragStart = null;
+      this.dragElement = null;
+      this.initialPos = null;
+      this.resizeHandle = null;
     }
 
     pointInElement(point, element) {
       // Simple bounding box check (no rotation for now)
-      return point.x >= element.x &&
-             point.x <= element.x + element.width &&
-             point.y >= element.y &&
-             point.y <= element.y + element.height
+      return (
+        point.x >= element.x &&
+        point.x <= element.x + element.width &&
+        point.y >= element.y &&
+        point.y <= element.y + element.height
+      );
     }
 
     hitTest(point, state) {
       // Reverse order to hit top elements first
       for (let i = state.elements.length - 1; i >= 0; i--) {
         if (this.pointInElement(point, state.elements[i])) {
-          return state.elements[i]
+          return state.elements[i];
         }
       }
-      return null
+      return null;
     }
 
     getResizeHandle(point, element, zoom) {
       // Larger hit area for easier grabbing
-      const hitArea = 12 / zoom
+      const hitArea = 12 / zoom;
       // Handle positions relative to element origin (0,0)
       const positions = {
-        'nw': { x: -5, y: -5 },
-        'n': { x: element.width / 2, y: -5 },
-        'ne': { x: element.width + 5, y: -5 },
-        'w': { x: -5, y: element.height / 2 },
-        'e': { x: element.width + 5, y: element.height / 2 },
-        'sw': { x: -5, y: element.height + 5 },
-        's': { x: element.width / 2, y: element.height + 5 },
-        'se': { x: element.width + 5, y: element.height + 5 }
-      }
+        nw: { x: -5, y: -5 },
+        n: { x: element.width / 2, y: -5 },
+        ne: { x: element.width + 5, y: -5 },
+        w: { x: -5, y: element.height / 2 },
+        e: { x: element.width + 5, y: element.height / 2 },
+        sw: { x: -5, y: element.height + 5 },
+        s: { x: element.width / 2, y: element.height + 5 },
+        se: { x: element.width + 5, y: element.height + 5 },
+      };
 
       for (const [handle, pos] of Object.entries(positions)) {
-        if (Math.abs(point.x - pos.x) < hitArea && Math.abs(point.y - pos.y) < hitArea) {
-          return handle
+        if (
+          Math.abs(point.x - pos.x) < hitArea &&
+          Math.abs(point.y - pos.y) < hitArea
+        ) {
+          return handle;
         }
       }
-      return null
+      return null;
     }
 
     handlePointerDown(e, state, options) {
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
       // Check if clicking on a resize handle first
       if (state.selectedIds.length > 0) {
-        const selectedElement = state.elements.find(e => e.id === state.selectedIds[0])
-        if (selectedElement && selectedElement.type !== 'line' && selectedElement.type !== 'arrow' && selectedElement.type !== 'path') {
+        const selectedElement = state.elements.find(
+          (e) => e.id === state.selectedIds[0]
+        );
+        if (
+          selectedElement &&
+          selectedElement.type !== "line" &&
+          selectedElement.type !== "arrow" &&
+          selectedElement.type !== "path"
+        ) {
           // Transform point to element's local coordinate system
           const localPoint = {
             x: point.x - selectedElement.x,
-            y: point.y - selectedElement.y
-          }
+            y: point.y - selectedElement.y,
+          };
 
-          const handle = this.getResizeHandle(localPoint, selectedElement, state.viewport.zoom)
+          const handle = this.getResizeHandle(
+            localPoint,
+            selectedElement,
+            state.viewport.zoom
+          );
           if (handle) {
-            this.resizeHandle = handle
-            this.dragStart = point
-            this.dragElement = selectedElement
+            this.resizeHandle = handle;
+            this.dragStart = point;
+            this.dragElement = selectedElement;
             this.initialBounds = {
               x: selectedElement.x,
               y: selectedElement.y,
               width: selectedElement.width,
-              height: selectedElement.height
-            }
-            return state
+              height: selectedElement.height,
+            };
+            return state;
           }
         }
       }
 
-      const hitElement = this.hitTest(point, state)
+      const hitElement = this.hitTest(point, state);
 
       if (hitElement) {
-        this.dragStart = point
-        this.dragElement = hitElement
-        this.initialPos = { x: hitElement.x, y: hitElement.y }
+        this.dragStart = point;
+        this.dragElement = hitElement;
+        this.initialPos = { x: hitElement.x, y: hitElement.y };
 
         return {
           ...state,
-          selectedIds: [hitElement.id]
-        }
+          selectedIds: [hitElement.id],
+        };
       } else {
         return {
           ...state,
-          selectedIds: []
-        }
+          selectedIds: [],
+        };
       }
     }
 
     handlePointerMove(e, state, options) {
-      if (!this.dragStart || !this.dragElement) return state
+      if (!this.dragStart || !this.dragElement) return state;
 
       const point = {
         x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-        y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-      }
+        y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+      };
 
-      const dx = point.x - this.dragStart.x
-      const dy = point.y - this.dragStart.y
+      const dx = point.x - this.dragStart.x;
+      const dy = point.y - this.dragStart.y;
 
-      const updatedElements = state.elements.map(el => {
+      const updatedElements = state.elements.map((el) => {
         if (el.id === this.dragElement.id) {
           // Resizing
           if (this.resizeHandle) {
-            let newX = this.initialBounds.x
-            let newY = this.initialBounds.y
-            let newWidth = this.initialBounds.width
-            let newHeight = this.initialBounds.height
+            let newX = this.initialBounds.x;
+            let newY = this.initialBounds.y;
+            let newWidth = this.initialBounds.width;
+            let newHeight = this.initialBounds.height;
 
-            if (this.resizeHandle.includes('w')) {
-              newWidth = this.initialBounds.width - dx
+            if (this.resizeHandle.includes("w")) {
+              newWidth = this.initialBounds.width - dx;
               if (newWidth < 10) {
-                newWidth = 10
-                newX = this.initialBounds.x + this.initialBounds.width - 10
+                newWidth = 10;
+                newX = this.initialBounds.x + this.initialBounds.width - 10;
               } else {
-                newX = this.initialBounds.x + dx
+                newX = this.initialBounds.x + dx;
               }
-            } else if (this.resizeHandle.includes('e')) {
-              newWidth = Math.max(10, this.initialBounds.width + dx)
+            } else if (this.resizeHandle.includes("e")) {
+              newWidth = Math.max(10, this.initialBounds.width + dx);
             }
 
-            if (this.resizeHandle.includes('n')) {
-              newHeight = this.initialBounds.height - dy
+            if (this.resizeHandle.includes("n")) {
+              newHeight = this.initialBounds.height - dy;
               if (newHeight < 10) {
-                newHeight = 10
-                newY = this.initialBounds.y + this.initialBounds.height - 10
+                newHeight = 10;
+                newY = this.initialBounds.y + this.initialBounds.height - 10;
               } else {
-                newY = this.initialBounds.y + dy
+                newY = this.initialBounds.y + dy;
               }
-            } else if (this.resizeHandle.includes('s')) {
-              newHeight = Math.max(10, this.initialBounds.height + dy)
+            } else if (this.resizeHandle.includes("s")) {
+              newHeight = Math.max(10, this.initialBounds.height + dy);
             }
 
             return {
@@ -1573,34 +1927,34 @@ Delete this note to start drawing!`
               x: newX,
               y: newY,
               width: newWidth,
-              height: newHeight
-            }
+              height: newHeight,
+            };
           }
           // Moving
           else if (this.initialPos) {
             return {
               ...el,
               x: this.initialPos.x + dx,
-              y: this.initialPos.y + dy
-            }
+              y: this.initialPos.y + dy,
+            };
           }
         }
-        return el
-      })
+        return el;
+      });
 
       return {
         ...state,
-        elements: updatedElements
-      }
+        elements: updatedElements,
+      };
     }
 
     handlePointerUp(e, state, options) {
-      this.dragStart = null
-      this.dragElement = null
-      this.initialPos = null
-      this.resizeHandle = null
-      this.initialBounds = null
-      return state
+      this.dragStart = null;
+      this.dragElement = null;
+      this.initialPos = null;
+      this.resizeHandle = null;
+      this.initialBounds = null;
+      return state;
     }
   }
 
@@ -1609,648 +1963,1017 @@ Delete this note to start drawing!`
       this.tools = {
         select: new SelectTool(),
         eraser: new EraserTool(),
-        rectangle: new ShapeTool('rectangle'),
-        circle: new ShapeTool('circle'),
+        rectangle: new ShapeTool("rectangle"),
+        circle: new ShapeTool("circle"),
         line: new LineTool(false),
         arrow: new LineTool(true),
         pen: new PenTool(),
         text: new TextTool(false),
-        sticky: new TextTool(true)
-      }
-      this.activeTool = 'select'
+        sticky: new TextTool(true),
+      };
+      this.activeTool = "select";
       // Detect color scheme for default stroke color
-      const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const isDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
       this.toolOptions = {
-        strokeColor: isDarkMode ? '#ffffff' : '#000000',
+        strokeColor: isDarkMode ? "#ffffff" : "#000000",
         strokeWidth: 2,
-        fillColor: '#cccccc',
-        strokeStyle: 'solid'
-      }
+        fillColor: "#cccccc",
+        strokeStyle: "solid",
+      };
     }
 
     setTool(name) {
       if (this.tools[name]) {
-        this.activeTool = name
+        this.activeTool = name;
       }
     }
 
     handlePointerDown(e, state) {
-      const tool = this.tools[this.activeTool]
+      const tool = this.tools[this.activeTool];
       if (tool && tool.handlePointerDown) {
-        return tool.handlePointerDown(e, state, this.toolOptions)
+        return tool.handlePointerDown(e, state, this.toolOptions);
       }
-      return state
+      return state;
     }
 
     handlePointerMove(e, state) {
-      const tool = this.tools[this.activeTool]
+      const tool = this.tools[this.activeTool];
       if (tool && tool.handlePointerMove) {
-        return tool.handlePointerMove(e, state, this.toolOptions)
+        return tool.handlePointerMove(e, state, this.toolOptions);
       }
-      return state
+      return state;
     }
 
     handlePointerUp(e, state) {
-      const tool = this.tools[this.activeTool]
+      const tool = this.tools[this.activeTool];
       if (tool && tool.handlePointerUp) {
-        return tool.handlePointerUp(e, state, this.toolOptions)
+        return tool.handlePointerUp(e, state, this.toolOptions);
       }
-      return state
+      return state;
     }
   }
 
   // ===== HISTORY MANAGER =====
   class HistoryManager {
     constructor() {
-      this.past = []
-      this.future = []
-      this.maxStates = 100
-      this.isUndoing = false
-      this.isRedoing = false
+      this.past = [];
+      this.future = [];
+      this.maxStates = 100;
+      this.isUndoing = false;
+      this.isRedoing = false;
     }
 
     record(state) {
       // Don't record during undo/redo
-      if (this.isUndoing || this.isRedoing) return
+      if (this.isUndoing || this.isRedoing) return;
 
       // Clone state (without preview and selectedIds)
       const snapshot = {
         version: state.version,
         viewport: { ...state.viewport },
-        elements: JSON.parse(JSON.stringify(state.elements))
-      }
+        elements: JSON.parse(JSON.stringify(state.elements)),
+      };
 
-      this.past.push(snapshot)
+      this.past.push(snapshot);
 
       // Limit stack size
       if (this.past.length > this.maxStates) {
-        this.past.shift()
+        this.past.shift();
       }
 
       // Clear future stack when new action is recorded
-      this.future = []
+      this.future = [];
     }
 
     undo(currentState) {
       if (this.past.length === 0) {
-        return null
+        return null;
       }
 
-      this.isUndoing = true
+      this.isUndoing = true;
 
       // Save current state to future
       const currentSnapshot = {
         version: currentState.version,
         viewport: { ...currentState.viewport },
-        elements: JSON.parse(JSON.stringify(currentState.elements))
-      }
-      this.future.push(currentSnapshot)
+        elements: JSON.parse(JSON.stringify(currentState.elements)),
+      };
+      this.future.push(currentSnapshot);
 
       // Restore previous state
-      const prevState = this.past.pop()
+      const prevState = this.past.pop();
 
-      this.isUndoing = false
+      this.isUndoing = false;
 
       return {
         ...prevState,
         selectedIds: [],
-        preview: null
-      }
+        preview: null,
+      };
     }
 
     redo(currentState) {
       if (this.future.length === 0) {
-        return null
+        return null;
       }
 
-      this.isRedoing = true
+      this.isRedoing = true;
 
       // Save current state to past
       const currentSnapshot = {
         version: currentState.version,
         viewport: { ...currentState.viewport },
-        elements: JSON.parse(JSON.stringify(currentState.elements))
-      }
-      this.past.push(currentSnapshot)
+        elements: JSON.parse(JSON.stringify(currentState.elements)),
+      };
+      this.past.push(currentSnapshot);
 
       // Restore future state
-      const nextState = this.future.pop()
+      const nextState = this.future.pop();
 
-      this.isRedoing = false
+      this.isRedoing = false;
 
       return {
         ...nextState,
         selectedIds: [],
-        preview: null
-      }
+        preview: null,
+      };
     }
 
     clear() {
-      this.past = []
-      this.future = []
+      this.past = [];
+      this.future = [];
     }
   }
 
   // ===== INITIALIZATION =====
-  const container = document.querySelector('#canvas-container')
-  const renderer = new CanvasRenderer(container)
-  const toolManager = new ToolManager()
-  window.toolManager = toolManager // Make globally accessible for auto-switch
-  const textEditor = new TextEditor()
-  const historyManager = new HistoryManager()
+  const container = document.querySelector("#canvas-container");
+  const renderer = new CanvasRenderer(container);
+  const toolManager = new ToolManager();
+  window.toolManager = toolManager; // Make globally accessible for auto-switch
+  const textEditor = new TextEditor();
+  const historyManager = new HistoryManager();
 
   const debouncedHistoryRecord = debounce(300, (state) => {
-    historyManager.record(state)
-  })
+    historyManager.record(state);
+  });
 
-  function handleStateChange(newState, skipTextEdit = false, skipSave = false, skipHistory = false) {
-    const oldState = state
-    state = newState
-    renderer.render(state)
+  function handleStateChange(
+    newState,
+    skipTextEdit = false,
+    skipSave = false,
+    skipHistory = false
+  ) {
+    const oldState = state;
+    state = newState;
+    renderer.render(state);
 
     // Record to history (debounced for continuous operations)
-    if (!skipHistory && !historyManager.isUndoing && !historyManager.isRedoing) {
-      debouncedHistoryRecord(state)
+    if (
+      !skipHistory &&
+      !historyManager.isUndoing &&
+      !historyManager.isRedoing
+    ) {
+      debouncedHistoryRecord(state);
     }
 
     // Auto-save (debounced)
     if (!skipSave) {
-      debouncedSave(state)
+      debouncedSave(state);
     }
 
     // Auto-open text editor for new text elements
-    if (!skipTextEdit && state.editingTextId && state.editingTextId !== oldState.editingTextId) {
-      const element = state.elements.find(el => el.id === state.editingTextId)
-      if (element && (element.type === 'text' || element.type === 'sticky')) {
-        const uiCanvas = document.querySelector('#ui-canvas')
-        const rect = uiCanvas.getBoundingClientRect()
-        textEditor.startEdit(element, { x: rect.left, y: rect.top }, state.viewport, () => {
-          handleStateChange({ ...state, editingTextId: null }, true)
-        })
+    if (
+      !skipTextEdit &&
+      state.editingTextId &&
+      state.editingTextId !== oldState.editingTextId
+    ) {
+      const element = state.elements.find(
+        (el) => el.id === state.editingTextId
+      );
+      if (element && (element.type === "text" || element.type === "sticky")) {
+        const uiCanvas = document.querySelector("#ui-canvas");
+        const rect = uiCanvas.getBoundingClientRect();
+        textEditor.startEdit(
+          element,
+          { x: rect.left, y: rect.top },
+          state.viewport,
+          () => {
+            handleStateChange({ ...state, editingTextId: null }, true);
+          }
+        );
       }
     }
   }
 
   // ===== EVENT HANDLERS =====
-  const uiCanvas = document.querySelector('#ui-canvas')
-  let isSpacePressed = false
-  let isPanning = false
-  let panStart = null
+  const uiCanvas = document.querySelector("#ui-canvas");
+  let isSpacePressed = false;
+  let isPanning = false;
+  let panStart = null;
 
-  uiCanvas.addEventListener('pointerdown', (e) => {
+  uiCanvas.addEventListener("pointerdown", (e) => {
     // Pan mode takes priority
     if (isSpacePressed || e.button === 1) {
-      isPanning = true
-      panStart = { x: e.clientX, y: e.clientY }
-      uiCanvas.style.cursor = 'grabbing'
-      e.preventDefault()
-      return
+      isPanning = true;
+      panStart = { x: e.clientX, y: e.clientY };
+      uiCanvas.style.cursor = "grabbing";
+      e.preventDefault();
+      return;
     }
 
-    const newState = toolManager.handlePointerDown(e, state)
-    handleStateChange(newState)
-  })
+    const newState = toolManager.handlePointerDown(e, state);
+    handleStateChange(newState);
+  });
 
-  uiCanvas.addEventListener('pointermove', (e) => {
+  uiCanvas.addEventListener("pointermove", (e) => {
     // Handle panning
     if (isPanning && panStart) {
-      const dx = e.clientX - panStart.x
-      const dy = e.clientY - panStart.y
+      const dx = e.clientX - panStart.x;
+      const dy = e.clientY - panStart.y;
 
-      handleStateChange({
-        ...state,
-        viewport: {
-          ...state.viewport,
-          x: state.viewport.x + dx,
-          y: state.viewport.y + dy
-        }
-      }, false, false, true)
+      handleStateChange(
+        {
+          ...state,
+          viewport: {
+            ...state.viewport,
+            x: state.viewport.x + dx,
+            y: state.viewport.y + dy,
+          },
+        },
+        false,
+        false,
+        true
+      );
 
-      panStart = { x: e.clientX, y: e.clientY }
-      e.preventDefault()
-      return
+      panStart = { x: e.clientX, y: e.clientY };
+      e.preventDefault();
+      return;
     }
 
-    const newState = toolManager.handlePointerMove(e, state)
-    handleStateChange(newState)
-  })
+    const newState = toolManager.handlePointerMove(e, state);
+    handleStateChange(newState);
+  });
 
-  uiCanvas.addEventListener('pointerup', (e) => {
+  uiCanvas.addEventListener("pointerup", (e) => {
     // Handle pan end
     if (isPanning) {
-      isPanning = false
-      panStart = null
-      uiCanvas.style.cursor = isSpacePressed ? 'grab' : 'default'
-      e.preventDefault()
-      return
+      isPanning = false;
+      panStart = null;
+      uiCanvas.style.cursor = isSpacePressed ? "grab" : "default";
+      e.preventDefault();
+      return;
     }
 
-    const newState = toolManager.handlePointerUp(e, state)
-    handleStateChange(newState)
-  })
+    const newState = toolManager.handlePointerUp(e, state);
+    handleStateChange(newState);
+  });
 
   // Double-click to edit text
-  uiCanvas.addEventListener('dblclick', (e) => {
+  uiCanvas.addEventListener("dblclick", (e) => {
     const point = {
       x: (e.offsetX - state.viewport.x) / state.viewport.zoom,
-      y: (e.offsetY - state.viewport.y) / state.viewport.zoom
-    }
+      y: (e.offsetY - state.viewport.y) / state.viewport.zoom,
+    };
 
     // Find clicked text element
     for (let i = state.elements.length - 1; i >= 0; i--) {
-      const el = state.elements[i]
-      if ((el.type === 'text' || el.type === 'sticky') &&
-          point.x >= el.x && point.x <= el.x + el.width &&
-          point.y >= el.y && point.y <= el.y + el.height) {
-
-        const rect = uiCanvas.getBoundingClientRect()
-        textEditor.startEdit(el, { x: rect.left, y: rect.top }, state.viewport, () => {
-          handleStateChange(state, true)
-        })
-        break
+      const el = state.elements[i];
+      if (
+        (el.type === "text" || el.type === "sticky") &&
+        point.x >= el.x &&
+        point.x <= el.x + el.width &&
+        point.y >= el.y &&
+        point.y <= el.y + el.height
+      ) {
+        const rect = uiCanvas.getBoundingClientRect();
+        textEditor.startEdit(
+          el,
+          { x: rect.left, y: rect.top },
+          state.viewport,
+          () => {
+            handleStateChange(state, true);
+          }
+        );
+        break;
       }
     }
-  })
+  });
 
   // Keyboard shortcuts for tools and actions
-  addEventListener('keydown', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return
+  addEventListener("keydown", (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
 
     // Track spacebar for panning
-    if (e.code === 'Space' && !isSpacePressed) {
-      isSpacePressed = true
-      uiCanvas.style.cursor = 'grab'
-      e.preventDefault()
-      return
+    if (e.code === "Space" && !isSpacePressed) {
+      isSpacePressed = true;
+      uiCanvas.style.cursor = "grab";
+      e.preventDefault();
+      return;
     }
 
     // Undo/Redo with Cmd/Ctrl
-    if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ') {
-      e.preventDefault()
+    if ((e.metaKey || e.ctrlKey) && e.code === "KeyZ") {
+      e.preventDefault();
       if (e.shiftKey) {
         // Redo
-        const newState = historyManager.redo(state)
+        const newState = historyManager.redo(state);
         if (newState) {
-          handleStateChange(newState, false, false, true)
+          handleStateChange(newState, false, false, true);
         }
       } else {
         // Undo
-        const newState = historyManager.undo(state)
+        const newState = historyManager.undo(state);
         if (newState) {
-          handleStateChange(newState, false, false, true)
+          handleStateChange(newState, false, false, true);
         }
       }
-      return
+      return;
     }
 
     // Don't handle other shortcuts if modifier keys are pressed
-    if (e.metaKey || e.ctrlKey || e.altKey) return
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
 
-    const container = document.querySelector('#canvas-container')
+    const container = document.querySelector("#canvas-container");
 
     switch (e.code) {
-      case 'KeyV':
-        toolManager.setTool('select')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="select"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyR':
-        toolManager.setTool('rectangle')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="rectangle"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyC':
-        toolManager.setTool('circle')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="circle"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyL':
-        toolManager.setTool('line')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="line"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyA':
-        toolManager.setTool('arrow')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="arrow"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyP':
-        toolManager.setTool('pen')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="pen"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyT':
-        toolManager.setTool('text')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="text"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyS':
-        toolManager.setTool('sticky')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="sticky"]')?.classList.add('active')
-        container?.classList.remove('eraser-cursor')
-        break
-      case 'KeyE':
-        toolManager.setTool('eraser')
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        document.querySelector('.tool-btn[data-tool="eraser"]')?.classList.add('active')
-        container?.classList.add('eraser-cursor')
-        break
-      case 'Delete':
-      case 'Backspace':
+      case "KeyV":
+        toolManager.setTool("select");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="select"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyR":
+        toolManager.setTool("rectangle");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="rectangle"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyC":
+        toolManager.setTool("circle");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="circle"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyL":
+        toolManager.setTool("line");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="line"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyA":
+        toolManager.setTool("arrow");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="arrow"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyP":
+        toolManager.setTool("pen");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="pen"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyT":
+        toolManager.setTool("text");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="text"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyS":
+        toolManager.setTool("sticky");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="sticky"]')
+          ?.classList.add("active");
+        container?.classList.remove("eraser-cursor");
+        break;
+      case "KeyE":
+        toolManager.setTool("eraser");
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        document
+          .querySelector('.tool-btn[data-tool="eraser"]')
+          ?.classList.add("active");
+        container?.classList.add("eraser-cursor");
+        break;
+      case "Delete":
+      case "Backspace":
         if (state.selectedIds.length > 0) {
-          const newElements = state.elements.filter(el => !state.selectedIds.includes(el.id))
-          handleStateChange({ ...state, elements: newElements, selectedIds: [] })
+          const newElements = state.elements.filter(
+            (el) => !state.selectedIds.includes(el.id)
+          );
+          handleStateChange({
+            ...state,
+            elements: newElements,
+            selectedIds: [],
+          });
         }
-        break
+        break;
     }
-  })
+  });
 
-  addEventListener('keyup', (e) => {
-    if (e.code === 'Space') {
-      isSpacePressed = false
-      isPanning = false
-      panStart = null
-      uiCanvas.style.cursor = 'default'
+  addEventListener("keyup", (e) => {
+    if (e.code === "Space") {
+      isSpacePressed = false;
+      isPanning = false;
+      panStart = null;
+      uiCanvas.style.cursor = "default";
     }
-  })
+  });
 
   // Zoom with mouse wheel
-  uiCanvas.addEventListener('wheel', (e) => {
-    e.preventDefault()
+  uiCanvas.addEventListener("wheel", (e) => {
+    e.preventDefault();
 
-    const delta = -e.deltaY
-    const zoomFactor = delta > 0 ? 1.1 : 0.9
+    const delta = -e.deltaY;
+    const zoomFactor = delta > 0 ? 1.1 : 0.9;
 
     // Get mouse position in viewport space
-    const rect = uiCanvas.getBoundingClientRect()
-    const mouseX = e.clientX - rect.left
-    const mouseY = e.clientY - rect.top
+    const rect = uiCanvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
 
     // Calculate new zoom
-    const newZoom = Math.max(0.1, Math.min(5, state.viewport.zoom * zoomFactor))
+    const newZoom = Math.max(
+      0.1,
+      Math.min(5, state.viewport.zoom * zoomFactor)
+    );
 
     // Adjust viewport position to zoom towards mouse
-    const zoomRatio = newZoom / state.viewport.zoom
-    const newX = mouseX - (mouseX - state.viewport.x) * zoomRatio
-    const newY = mouseY - (mouseY - state.viewport.y) * zoomRatio
+    const zoomRatio = newZoom / state.viewport.zoom;
+    const newX = mouseX - (mouseX - state.viewport.x) * zoomRatio;
+    const newY = mouseY - (mouseY - state.viewport.y) * zoomRatio;
 
-    handleStateChange({
-      ...state,
-      viewport: {
-        ...state.viewport,
-        zoom: newZoom,
-        x: newX,
-        y: newY
-      }
-    }, false, false, true)
-  })
+    handleStateChange(
+      {
+        ...state,
+        viewport: {
+          ...state.viewport,
+          zoom: newZoom,
+          x: newX,
+          y: newY,
+        },
+      },
+      false,
+      false,
+      true
+    );
+  });
 
   // Load and initialize
   async function init() {
-    const loadedState = await load()
-    state = { ...loadedState, preview: null, selectedIds: [] }
-    renderer.render(state)
+    const loadedState = await load();
+    state = { ...loadedState, preview: null, selectedIds: [] };
+    renderer.render(state);
   }
 
-  init()
+  init();
 
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js");
   }
 
   // UI Initialization
   function initUI() {
     // Toolbar tool buttons
-    document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tool = btn.getAttribute('data-tool')
-        toolManager.setTool(tool)
+    document.querySelectorAll(".tool-btn[data-tool]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tool = btn.getAttribute("data-tool");
+        toolManager.setTool(tool);
 
         // Update active state
-        document.querySelectorAll('.tool-btn[data-tool]').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
+        document
+          .querySelectorAll(".tool-btn[data-tool]")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
         // Toggle eraser cursor
-        const container = document.querySelector('#canvas-container')
-        if (tool === 'eraser') {
-          container.classList.add('eraser-cursor')
+        const container = document.querySelector("#canvas-container");
+        if (tool === "eraser") {
+          container.classList.add("eraser-cursor");
         } else {
-          container.classList.remove('eraser-cursor')
+          container.classList.remove("eraser-cursor");
         }
-      })
-    })
+      });
+    });
 
     // Color pickers - declare all variables first
-    const strokeColorBtn = document.getElementById('stroke-color-btn')
-    const strokeDropdown = document.getElementById('stroke-dropdown')
-    const strokeIndicator = document.getElementById('stroke-indicator')
-    const fillColorBtn = document.getElementById('fill-color-btn')
-    const fillDropdown = document.getElementById('fill-dropdown')
-    const fillIndicator = document.getElementById('fill-indicator')
+    const strokeColorBtn = document.getElementById("stroke-color-btn");
+    const strokeDropdown = document.getElementById("stroke-dropdown");
+    const strokeIndicator = document.getElementById("stroke-indicator");
+    const fillColorBtn = document.getElementById("fill-color-btn");
+    const fillDropdown = document.getElementById("fill-dropdown");
+    const fillIndicator = document.getElementById("fill-indicator");
 
     // Initialize stroke indicator with current tool color
-    strokeIndicator.style.background = toolManager.toolOptions.strokeColor
+    strokeIndicator.style.background = toolManager.toolOptions.strokeColor;
 
     // Set active state on correct color button
-    document.querySelectorAll('#stroke-dropdown .color-swatch').forEach(btn => {
-      if (btn.getAttribute('data-color') === toolManager.toolOptions.strokeColor) {
-        btn.classList.add('active')
-      } else {
-        btn.classList.remove('active')
-      }
-    })
+    document
+      .querySelectorAll("#stroke-dropdown .color-swatch")
+      .forEach((btn) => {
+        if (
+          btn.getAttribute("data-color") === toolManager.toolOptions.strokeColor
+        ) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
 
     // Stroke color picker
-    strokeColorBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
-      strokeDropdown.classList.toggle('visible')
-      fillDropdown.classList.remove('visible')
-    })
+    strokeColorBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      strokeDropdown.classList.toggle("visible");
+      fillDropdown.classList.remove("visible");
+    });
 
-    document.querySelectorAll('#stroke-dropdown .color-swatch').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation()
-        const color = btn.getAttribute('data-color')
-        toolManager.toolOptions.strokeColor = color
+    document
+      .querySelectorAll("#stroke-dropdown .color-swatch")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const color = btn.getAttribute("data-color");
+          toolManager.toolOptions.strokeColor = color;
 
-        // Update indicator
-        strokeIndicator.style.background = color
+          // Update indicator
+          strokeIndicator.style.background = color;
 
-        // Update active state
-        document.querySelectorAll('#stroke-dropdown .color-swatch').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
+          // Update active state
+          document
+            .querySelectorAll("#stroke-dropdown .color-swatch")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
 
-        // Update selected element color (except sticky notes)
-        if (state.selectedIds.length > 0) {
-          const updatedElements = state.elements.map(el => {
-            if (state.selectedIds.includes(el.id) && el.type !== 'sticky') {
-              return { ...el, strokeColor: color }
-            }
-            return el
-          })
-          handleStateChange({ ...state, elements: updatedElements })
-        }
+          // Update selected element color (except sticky notes)
+          if (state.selectedIds.length > 0) {
+            const updatedElements = state.elements.map((el) => {
+              if (state.selectedIds.includes(el.id) && el.type !== "sticky") {
+                return { ...el, strokeColor: color };
+              }
+              return el;
+            });
+            handleStateChange({ ...state, elements: updatedElements });
+          }
 
-        strokeDropdown.classList.remove('visible')
-      })
-    })
+          strokeDropdown.classList.remove("visible");
+        });
+      });
 
     // Fill color picker
 
-    fillColorBtn.addEventListener('click', (e) => {
-      e.stopPropagation()
-      fillDropdown.classList.toggle('visible')
-      strokeDropdown.classList.remove('visible')
-    })
+    fillColorBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      fillDropdown.classList.toggle("visible");
+      strokeDropdown.classList.remove("visible");
+    });
 
-    document.querySelectorAll('#fill-dropdown .color-swatch').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation()
-        const color = btn.getAttribute('data-color')
-        toolManager.toolOptions.fillColor = color
+    document.querySelectorAll("#fill-dropdown .color-swatch").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const color = btn.getAttribute("data-color");
+        toolManager.toolOptions.fillColor = color;
 
         // Update indicator
-        if (color === 'transparent') {
-          fillIndicator.style.background = 'transparent'
-          fillIndicator.style.border = '1px solid #000'
+        if (color === "transparent") {
+          fillIndicator.style.background = "transparent";
+          fillIndicator.style.border = "1px solid #000";
         } else {
-          fillIndicator.style.background = color
-          fillIndicator.style.border = '1px solid rgba(0, 0, 0, 0.2)'
+          fillIndicator.style.background = color;
+          fillIndicator.style.border = "1px solid rgba(0, 0, 0, 0.2)";
         }
 
         // Update active state
-        document.querySelectorAll('#fill-dropdown .color-swatch').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
+        document
+          .querySelectorAll("#fill-dropdown .color-swatch")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
 
         // Update selected element fill color (except sticky notes)
         if (state.selectedIds.length > 0) {
-          const updatedElements = state.elements.map(el => {
-            if (state.selectedIds.includes(el.id) && el.type !== 'sticky') {
-              return { ...el, fillColor: color }
+          const updatedElements = state.elements.map((el) => {
+            if (state.selectedIds.includes(el.id) && el.type !== "sticky") {
+              return { ...el, fillColor: color };
             }
-            return el
-          })
-          handleStateChange({ ...state, elements: updatedElements })
+            return el;
+          });
+          handleStateChange({ ...state, elements: updatedElements });
         }
 
-        fillDropdown.classList.remove('visible')
-      })
-    })
+        fillDropdown.classList.remove("visible");
+      });
+    });
 
     // Close dropdowns when clicking outside
-    document.addEventListener('click', () => {
-      strokeDropdown.classList.remove('visible')
-      fillDropdown.classList.remove('visible')
-    })
+    document.addEventListener("click", () => {
+      strokeDropdown.classList.remove("visible");
+      fillDropdown.classList.remove("visible");
+      strokeWidthDropdown.classList.remove("visible");
+      strokeStyleDropdown.classList.remove("visible");
+    });
 
-    // Stroke width
-    document.querySelectorAll('.stroke-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const width = parseInt(btn.getAttribute('data-width'))
-        toolManager.toolOptions.strokeWidth = width
+    // Stroke width picker
+    const strokeWidthBtn = document.getElementById("stroke-width-btn");
+    const strokeWidthDropdown = document.getElementById(
+      "stroke-width-dropdown"
+    );
 
-        // Update active state
-        document.querySelectorAll('.stroke-btn').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
+    strokeWidthBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      strokeWidthDropdown.classList.toggle("visible");
+      strokeStyleDropdown.classList.remove("visible");
+      strokeDropdown.classList.remove("visible");
+      fillDropdown.classList.remove("visible");
+    });
 
-        // Update selected element stroke width (except sticky notes)
-        if (state.selectedIds.length > 0) {
-          const updatedElements = state.elements.map(el => {
-            if (state.selectedIds.includes(el.id) && el.type !== 'sticky') {
-              return { ...el, strokeWidth: width }
-            }
-            return el
-          })
-          handleStateChange({ ...state, elements: updatedElements })
-        }
-      })
-    })
+    document
+      .querySelectorAll("#stroke-width-dropdown .stroke-btn")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const width = parseInt(btn.getAttribute("data-width"));
+          toolManager.toolOptions.strokeWidth = width;
 
-    // Stroke style
-    document.querySelectorAll('.style-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const style = btn.getAttribute('data-style')
-        toolManager.toolOptions.strokeStyle = style
+          // Update active state
+          document
+            .querySelectorAll("#stroke-width-dropdown .stroke-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
 
-        // Update active state
-        document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'))
-        btn.classList.add('active')
+          // Update selected element stroke width (except sticky notes)
+          if (state.selectedIds.length > 0) {
+            const updatedElements = state.elements.map((el) => {
+              if (state.selectedIds.includes(el.id) && el.type !== "sticky") {
+                return { ...el, strokeWidth: width };
+              }
+              return el;
+            });
+            handleStateChange({ ...state, elements: updatedElements });
+          }
 
-        // Update selected element stroke style (except sticky notes)
-        if (state.selectedIds.length > 0) {
-          const updatedElements = state.elements.map(el => {
-            if (state.selectedIds.includes(el.id) && el.type !== 'sticky') {
-              return { ...el, strokeStyle: style }
-            }
-            return el
-          })
-          handleStateChange({ ...state, elements: updatedElements })
-        }
-      })
-    })
+          strokeWidthDropdown.classList.remove("visible");
+        });
+      });
+
+    // Stroke style picker
+    const strokeStyleBtn = document.getElementById("stroke-style-btn");
+    const strokeStyleDropdown = document.getElementById(
+      "stroke-style-dropdown"
+    );
+
+    strokeStyleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      strokeStyleDropdown.classList.toggle("visible");
+      strokeWidthDropdown.classList.remove("visible");
+      strokeDropdown.classList.remove("visible");
+      fillDropdown.classList.remove("visible");
+    });
+
+    document
+      .querySelectorAll("#stroke-style-dropdown .style-btn")
+      .forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const style = btn.getAttribute("data-style");
+          toolManager.toolOptions.strokeStyle = style;
+
+          // Update active state
+          document
+            .querySelectorAll("#stroke-style-dropdown .style-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Update selected element stroke style (except sticky notes)
+          if (state.selectedIds.length > 0) {
+            const updatedElements = state.elements.map((el) => {
+              if (state.selectedIds.includes(el.id) && el.type !== "sticky") {
+                return { ...el, strokeStyle: style };
+              }
+              return el;
+            });
+            handleStateChange({ ...state, elements: updatedElements });
+          }
+
+          strokeStyleDropdown.classList.remove("visible");
+        });
+      });
 
     // Menu button
-    const menu = document.querySelector('#menu')
-    const menuBtn = document.querySelector('#menu-btn')
-    const qr = document.querySelector('#qr')
-    const newDoc = document.querySelector('#menu a[href="#new"]')
+    const menu = document.querySelector("#menu");
+    const menuBtn = document.querySelector("#menu-btn");
+    const qr = document.querySelector("#qr");
+    const newDoc = document.querySelector('#menu a[href="#new"]');
 
-    menuBtn.addEventListener('click', event => {
-      menu.classList.toggle('visible')
-      qr.setAttribute('href', '/qr' + location.hash)
-    })
+    menuBtn.addEventListener("click", (event) => {
+      menu.classList.toggle("visible");
+      qr.setAttribute("href", "/qr" + location.hash);
+    });
 
     // New document
-    newDoc.addEventListener('click', (e) => {
-      e.preventDefault()
-      const newState = createEmptyCanvas()
-      state = { ...newState, preview: null, selectedIds: [] }
-      historyManager.clear()
-      handleStateChange(state, false, false, true)
-      localStorage.removeItem(STORAGE_KEY)
-      history.replaceState(null, '', '#')
-      menu.classList.remove('visible')
-    })
+    newDoc.addEventListener("click", (e) => {
+      e.preventDefault();
+      const newState = createEmptyCanvas();
+      state = { ...newState, preview: null, selectedIds: [] };
+      historyManager.clear();
+      handleStateChange(state, false, false, true);
+      localStorage.removeItem(STORAGE_KEY);
+      history.replaceState(null, "", "#");
+      menu.classList.remove("visible");
+    });
 
     // Clear all
-    const clearAllBtn = document.querySelector('#clear-all')
-    clearAllBtn.addEventListener('click', (e) => {
-      e.preventDefault()
-      if (state.elements.length > 0 && confirm('Delete all elements? This cannot be undone.')) {
-        handleStateChange({ ...state, elements: [], selectedIds: [] })
+    const clearAllBtn = document.querySelector("#clear-all");
+    clearAllBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (
+        state.elements.length > 0 &&
+        confirm("Delete all elements? This cannot be undone.")
+      ) {
+        handleStateChange({ ...state, elements: [], selectedIds: [] });
       }
-      menu.classList.remove('visible')
-    })
+      menu.classList.remove("visible");
+    });
 
-    document.body.addEventListener('click', event => {
-      let t = event.target
-      if (t.closest('#menu')) return
-      if (t.closest('#menu-btn')) return
-      menu.classList.remove('visible')
-    })
+    // Export as PNG
+    const exportPngBtn = document.querySelector("#export-png");
+    exportPngBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      menu.classList.remove("visible");
+
+      if (state.elements.length === 0) {
+        alert("Canvas is empty. Nothing to export.");
+        return;
+      }
+
+      // Calculate bounding box of all elements
+      let minX = Infinity,
+        minY = Infinity,
+        maxX = -Infinity,
+        maxY = -Infinity;
+
+      state.elements.forEach((el) => {
+        const x1 = el.x;
+        const y1 = el.y;
+        const x2 = el.x + el.width;
+        const y2 = el.y + el.height;
+
+        minX = Math.min(minX, x1);
+        minY = Math.min(minY, y1);
+        maxX = Math.max(maxX, x2);
+        maxY = Math.max(maxY, y2);
+      });
+
+      const padding = 40;
+      const canvasWidth = maxX - minX + padding * 2;
+      const canvasHeight = maxY - minY + padding * 2;
+
+      // Create temporary canvas
+      const exportCanvas = document.createElement("canvas");
+      exportCanvas.width = canvasWidth;
+      exportCanvas.height = canvasHeight;
+      const ctx = exportCanvas.getContext("2d");
+
+      // Fill with white background
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Translate to account for padding and offset
+      ctx.save();
+      ctx.translate(padding - minX, padding - minY);
+
+      // Render all elements using the same rendering logic
+      const sorted = [...state.elements].sort((a, b) => a.zIndex - b.zIndex);
+      sorted.forEach((element) => {
+        ctx.save();
+
+        ctx.translate(element.x, element.y);
+        ctx.rotate(((element.rotation || 0) * Math.PI) / 180);
+
+        ctx.strokeStyle = element.strokeColor;
+        ctx.lineWidth = element.strokeWidth;
+        ctx.fillStyle = element.fillColor;
+        ctx.globalAlpha = element.opacity || 1;
+
+        if (element.strokeStyle === "dashed") {
+          ctx.setLineDash([8, 8]);
+        } else {
+          ctx.setLineDash([]);
+        }
+
+        switch (element.type) {
+          case "rectangle":
+            if (element.fillColor !== "transparent") {
+              ctx.fillRect(0, 0, element.width, element.height);
+            }
+            if (element.strokeWidth > 0) {
+              ctx.strokeRect(0, 0, element.width, element.height);
+            }
+            break;
+
+          case "circle":
+            ctx.beginPath();
+            const radius = Math.min(element.width, element.height) / 2;
+            ctx.arc(
+              element.width / 2,
+              element.height / 2,
+              radius,
+              0,
+              Math.PI * 2
+            );
+            if (element.fillColor !== "transparent") {
+              ctx.fill();
+            }
+            if (element.strokeWidth > 0) {
+              ctx.stroke();
+            }
+            break;
+
+          case "line":
+          case "arrow":
+            ctx.beginPath();
+            ctx.moveTo(element.props.startX, element.props.startY);
+            ctx.lineTo(element.props.endX, element.props.endY);
+            ctx.stroke();
+
+            if (element.type === "arrow") {
+              const angle = Math.atan2(
+                element.props.endY - element.props.startY,
+                element.props.endX - element.props.startX
+              );
+              const headLength = 15;
+              ctx.beginPath();
+              ctx.moveTo(element.props.endX, element.props.endY);
+              ctx.lineTo(
+                element.props.endX - headLength * Math.cos(angle - Math.PI / 6),
+                element.props.endY - headLength * Math.sin(angle - Math.PI / 6)
+              );
+              ctx.moveTo(element.props.endX, element.props.endY);
+              ctx.lineTo(
+                element.props.endX - headLength * Math.cos(angle + Math.PI / 6),
+                element.props.endY - headLength * Math.sin(angle + Math.PI / 6)
+              );
+              ctx.stroke();
+            }
+            break;
+
+          case "path":
+            if (element.props.points && element.props.points.length > 1) {
+              ctx.beginPath();
+              ctx.moveTo(
+                element.props.points[0][0],
+                element.props.points[0][1]
+              );
+              for (let i = 1; i < element.props.points.length; i++) {
+                ctx.lineTo(
+                  element.props.points[i][0],
+                  element.props.points[i][1]
+                );
+              }
+              ctx.stroke();
+            }
+            break;
+
+          case "text":
+          case "sticky":
+            if (element.type === "sticky" && element.props.backgroundColor) {
+              ctx.fillStyle = element.props.backgroundColor;
+              ctx.fillRect(0, 0, element.width, element.height);
+              ctx.strokeStyle = "#d4c5a9";
+              ctx.lineWidth = 1;
+              ctx.strokeRect(0, 0, element.width, element.height);
+            }
+
+            if (element.props.text) {
+              ctx.fillStyle = element.strokeColor;
+              ctx.font = `${element.props.fontSize || 16}px ${
+                element.props.fontFamily || "system-ui"
+              }`;
+              ctx.textBaseline = "top";
+              ctx.textAlign = element.props.textAlign || "left";
+
+              const lines = renderer.wrapText(
+                element.props.text,
+                element.width - 10,
+                ctx
+              );
+              const lineHeight = (element.props.fontSize || 16) * 1.5;
+
+              lines.forEach((line, i) => {
+                ctx.fillText(line, 5, 5 + i * lineHeight);
+              });
+            }
+            break;
+        }
+
+        ctx.restore();
+      });
+
+      ctx.restore();
+
+      // Convert to blob and download
+      exportCanvas.toBlob(async (blob) => {
+        const timestamp = new Date()
+          .toISOString()
+          .replace(/[:.]/g, "-")
+          .slice(0, -5);
+        const filename = `doodleboard-${timestamp}.png`;
+
+        // Try File System Access API first
+        if ("showSaveFilePicker" in window) {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: filename,
+              types: [
+                {
+                  description: "PNG Image",
+                  accept: { "image/png": [".png"] },
+                },
+              ],
+            });
+            const writable = await handle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            return;
+          } catch (err) {
+            if (err.name !== "AbortError") {
+              console.error("Failed to save file:", err);
+            }
+            // Fall through to blob download
+          }
+        }
+
+        // Fallback to blob download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }, "image/png");
+    });
+
+    document.body.addEventListener("click", (event) => {
+      let t = event.target;
+      if (t.closest("#menu")) return;
+      if (t.closest("#menu-btn")) return;
+      menu.classList.remove("visible");
+    });
   }
 
   function ripple(event) {
-    const button = event.currentTarget
-    const circle = document.createElement('span')
-    const diameter = Math.max(button.clientWidth, button.clientHeight)
-    const radius = diameter / 2
-    circle.style.width = circle.style.height = `${diameter}px`
-    circle.style.left = `${(event.clientX || event.targetTouches[0].pageX) - button.offsetLeft - radius}px`
-    circle.style.top = `${(event.clientY || event.targetTouches[0].pageY) - button.offsetTop - radius}px`
-    circle.classList.add('ripple')
-    const ripple = button.getElementsByClassName('ripple')[0]
-    if (ripple) ripple.remove()
-    button.appendChild(circle)
+    const button = event.currentTarget;
+    const circle = document.createElement("span");
+    const diameter = Math.max(button.clientWidth, button.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    circle.style.left = `${
+      (event.clientX || event.targetTouches[0].pageX) -
+      button.offsetLeft -
+      radius
+    }px`;
+    circle.style.top = `${
+      (event.clientY || event.targetTouches[0].pageY) -
+      button.offsetTop -
+      radius
+    }px`;
+    circle.classList.add("ripple");
+    const ripple = button.getElementsByClassName("ripple")[0];
+    if (ripple) ripple.remove();
+    button.appendChild(circle);
   }
 
-  initUI()
+  initUI();
 </script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
